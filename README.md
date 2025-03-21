@@ -11,20 +11,17 @@ export class User{
         this.email = email;
         this.token = token;
         this.hp = 0;
+        this.hand = [] // 4 cards au debut du match
+        this.board = []
+        this.cardPicked = //new Card()
+        this.turn = false
         this.Champions = [];
         this.Deck = [];
     }
 
+    //####################" PARTIE 1 ######################
     isLoggedIn(){
         return this?.token != -1 && this?.id != null;
-    }
-
-    selectChampions(cards){
-        // endpoint = /cards
-    }
-
-    selectDeck(cards){ // {"key":"Jax"},{"key":"Ivern"}
-        // endpoint = `/match/initDeck?deck=${cards}`
     }
 
     login(){
@@ -46,23 +43,52 @@ export class User{
         // endpoint = /unsubscribe
     }
 
-    requestMatch(){
+    //####################### PREMATCH LOGIC ########################
+
+    joinRequestMatchList(){ // S'ajoute a la liste de joueurs voulant jouer
         // endpoint = /matchmaking/participate
+
         const newMatch = Match()
         return newMatch
+        // newMatch.getAllPlayers() - pour voir ceux qui veulent jouer
     }
 
-    viewMatchParticipants(){
-        if ()
+    requestMatch(match){
+        // endpoint = /request{match.matchmakingId}
     }
 
-    acceptMatch(matchMakingId){
-        // endpoint = `.../acceptRequest${matchMakingId}`
+
+    acceptMatch(match){
+        // endpoint = `.../acceptRequest${match.matchMakingId}`
     }
 
-    attack(){
+
+    //##################### IN MATCH ACTIONS ##############
+
+    getAvailableChampions(cards){
+        // endpoint = /cards
+    }
+
+    selectDeck(cards){ // {"key":"Jax"},{"key":"Ivern"}
+        // endpoint = `/match/initDeck?deck=${cards.map(card => card.key)}`
+    }
+
+    showHand(){
+
+    }
+
+    pickCard(){
+        // endpoint = /pickCard
+        return cartePioche
+    }
+
+    playCard(card){
+        //endpoint = /playCard${card.key}
+    }
+
+    attackCard(card, opponent){
         // ATTACK
-        // endpoint = /match/attackPlayer
+        // endpoint = /match/attack?card={card.key}&ennemyCard=${opponent.board.card.key}
 
         if (/*card.info.attack > ennemyCard.info.defense*/){
             // DEGAT
@@ -70,6 +96,11 @@ export class User{
         }
 
         // endpoint = /match/endTurn
+    }
+    
+
+    directAttack(){
+        // endpoint = /attackPlayer
     }
 }
 
@@ -86,14 +117,23 @@ export class Card{
 }
 
 export class Match(){
-    constructor(matchID, originator, players){
-        this.id = matchID
+    constructor(matchMakingID, originator, players){
+        this.id = matchMakingID
         this.originator = originator
-        this.players = players
+        this.opponent = opponent
+        this.status = "";
     }
 
-    getAllPlayers(){
-        // endpoint = /matchmaking/participate
+    get(){
+        //endpoint = /getMatch
+    }
+
+    getPlayers(){
+        // endpoint = /matchmaking/getAll
+    }
+
+    start(){
+
     }
 
     endMatch(){

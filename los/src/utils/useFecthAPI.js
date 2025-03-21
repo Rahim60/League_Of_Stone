@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export const useFetchAPI = (methodType, bodyVal=null, endpoints="", headerToken="") => {
+export const useFetchAPI = (methodType, endpoints, bodyVal=null, headerToken="") => {
     const [err, setError] = useState("");
     const [res, setRes] = useState([]);
 
