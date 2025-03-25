@@ -40,3 +40,33 @@ a {
     color-scheme: dark;
   }
 }
+
+
+.color{
+  background-color: rgb(64, 11, 143);
+}
+
+.couleur{
+  color: red;
+}
+
+.background{
+  background-color: whitesmoke;
+}
+
+/* .image_arriere_plan{
+  background-image: url("../WhatsApp.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  width: 100%;  
+} */
+
+.container-titre{
+  background-color: bisque;
+}
+
+.image{
+  /* background-image: url('../image1.webp'); */
+  background-color: #4B0082;
+}

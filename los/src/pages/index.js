@@ -1,5 +1,9 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
+import "../styles/Home.module.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Connexion from "./connexion";
+import Inscription from "./inscription";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -11,6 +15,16 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <div className="text-center color">
+      <h1>League Of Stones</h1>
+      <nav>
+      <ul>
+        <Link href={"./connexion"}>Connexion</Link>
+        <Link href={"./inscription"}>Inscription</Link>
+      </ul>
+      </nav>
+      </div>
+
     </>
   );
 }
