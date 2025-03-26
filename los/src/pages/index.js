@@ -1,7 +1,7 @@
 import Head from "next/head";
 import "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Connexion from "./signin";
+import SignIn from "./signin";
 import Inscription from "./inscription";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ export default function Home() {
       <h1>League Of Stones</h1>
       <nav>
       <ul>
-        <Link href={"./connexion"}>Connexion</Link>
+        <Link href={"./signin"}>Connexion</Link>
         <Link href={"./inscription"}>Inscription</Link>
       </ul>
       </nav>

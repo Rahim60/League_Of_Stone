@@ -22,7 +22,7 @@ export default function Acceuil() {
       setUsername(storedName);
     } else {
       console.warn("Aucun token trouvé, redirection vers la connexion...");
-      router.push("/connexion"); // Redirige vers la page de connexion
+      router.push("/signin"); // Redirige vers la page de connexion
     }
 
     // Charger les champions depuis l'API
@@ -52,7 +52,7 @@ export default function Acceuil() {
   const handleLogout = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("name");
-    router.push("/connexion"); // Redirection avec router
+    router.push("/signin"); // Redirection avec router
     sessionStorage.clear();
   };
 

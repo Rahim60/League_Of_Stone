@@ -1,12 +1,11 @@
-import { useEffect } from "react";
+import { useState } from "react";
 
 export const useFetchAPI = (methodType, endpoints, bodyVal=null, headerToken="") => {
     const [err, setError] = useState("");
     const [res, setRes] = useState([]);
 
-    useEffect(async () => {
-        const URL = 'http://localhost:4000/';
-        const url = endpoints ? `${URL}${endpoints}`: URL;
+    const fetchFunc = async () => {
+        const url = `http://localhost:4000/${endpoints}`;
         const request = {
             method : methodType,
             headers : {
@@ -23,16 +22,7 @@ export const useFetchAPI = (methodType, endpoints, bodyVal=null, headerToken="")
             if (data?.message == "error") throw new Erreur ("Donnée erronée");
             setRes(data?.data)
         } catch (error){ setError(error.message) };
-    }, [methodType, URL, bodyVal, headerToken, endpoints])
+    }
 
-    return {res, err}
+    return [res, fetchFunc, err]
 }
-
-export const isAuthentic = () => {
-    const token = localStorage.getItem("token");
-    return token != "";
-};
-
-export const updateMatchRequest = () => {
-
-};

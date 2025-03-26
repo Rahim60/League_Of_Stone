@@ -29,7 +29,7 @@ export default function MatchMaking() {
 
     // Si aucune donnée n'est trouvée, rediriger vers la page d'accueil ou de connexion
     if (!storedDeck || !storedToken) {
-      router.push("/connexion");
+      router.push("/signin");
     }
   }, [router]);
 
