@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router"; // Importation du router
 import Head from "next/head";
-import Link from "next/link";
 import "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Champion from "@/components/Champions";
 import Deck from "@/components/Deck";
-import MatchMaking from "./matchMaking";
 
 export default function Acceuil() {
   const router = useRouter(); // Initialisation du router

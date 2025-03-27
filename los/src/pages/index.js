@@ -1,8 +1,6 @@
 import Head from "next/head";
 import "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import SignIn from "./signin";
-import Inscription from "./inscription";
 import Link from "next/link";
 
 

@@ -1,28 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 
-export const useFetchAPI = (methodType, endpoints, bodyVal=null, headerToken="") => {
-    const [err, setError] = useState("");
-    const [res, setRes] = useState([]);
+export const useFetchGet = (url, token) => {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
 
-    const fetchFunc = async () => {
-        const url = `http://localhost:4000/${endpoints}`;
-        const request = {
-            method : methodType,
-            headers : {
-                "Content-Type" :  "application/json",
-                ...(headerToken && {"Authorisation" : `Bearer ${headerToken}`})
-            },
-            ...(bodyVal && {body : JSON.stringify(body)})
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const result = await response.json();
+                setData(result);
+            } catch (err) {
+                setError(err.message);
+            }
         };
-    
-        try{
-            const response = await fetch(url, request);
-            if (!response.ok) throw new Error("Erreur lors de la connexion a l'API");
-            const data = await response.json();
-            if (data?.message == "error") throw new Erreur ("Donnée erronée");
-            setRes(data?.data)
-        } catch (error){ setError(error.message) };
-    }
 
-    return [res, fetchFunc, err]
-}
+        fetchData();
+    }, [url, token]);
+
+    return { data, error };
+};
+
+
+export const useFetchAPI = (url, method, token) => {
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+
+    const execute = async (body) => {
+        try {
+            const response = await fetch(url, {
+                method: method.toUpperCase(),
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body : body ? JSON.stringify(body) : null,
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const result = await response.json();
+            setData(result);
+            return result;
+        } catch (err) {
+            setError(err.message);
+            throw err;
+        }
+    };
+
+    return { data, error, execute };
+}; 

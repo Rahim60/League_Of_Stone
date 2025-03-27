@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Carte from "@/components/Cards"; // Assurez-vous que le chemin est correct
 import "bootstrap/dist/css/bootstrap.min.css";
 import Deck from "@/components/Deck";
 
-export default function MatchMaking() {
+const MatchMaking = () => {
   const [deck, setDeck] = useState([]);
   const [username, setUsername] = useState("");
   const [token, setToken] = useState("");
@@ -27,18 +26,33 @@ export default function MatchMaking() {
     if (!storedDeck || !storedToken) router.push("/signin");
   }, []);
 
-  const participate = async () => {
+  const joinQueue = async () => {
+    const res = await fetch("http://localhost:3001/users/amIConnected", {
+      method : "GET",
+      headers: {
+        'Authorization': token
+      }
+    });
+    const data = await res.json();
+    !data?.connectedUser && setError("Not connected on the server");
+    console.log(data)
+
     try{
-      const response = await fetch ("GET", "http://localhost:3000/match/participate");
-      if (!response.ok) throw new Error("Erreur lors de la connexion à /match/participate");
-      const parsedData = await response.json();
-      console.log(parsedData);
+      const response = await fetch("http://localhost:3001/matchmaking/participate", {
+        method : "GET",
+        headers: {
+          'Authorization': token
+        }
+      });
+      if (!response.ok) throw new Error("Erreur lors de la connexion à /matchmaking/participate");
     }catch(err){ 
       setError(err.message);
     }
+
+    console.log(error)
   }
 
-  const retourAccueil = ()=>{
+  const retourAccueil = () => {
     sessionStorage.removeItem("deck");
     router.push("/acceuil");
   }
@@ -72,16 +86,16 @@ export default function MatchMaking() {
                 Accueil
               </button>
 
-              <button className="btn btn-success col-3" onClick={participate}>
+              <button className="btn btn-success col-3" onClick={joinQueue}>
                 Rejoindre la liste d'attente
               </button>
             </div>
 
           </div>
-
-          {error && <p>{error}</p>}
         </div>
       </div>
     </div>
   );
 }
+
+export default MatchMaking;
