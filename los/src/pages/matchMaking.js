@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Carte from "./components/cards"; // Assurez-vous que le chemin est correct
+import Carte from "@/components/Cards"; // Assurez-vous que le chemin est correct
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function MatchMaking() {
@@ -34,6 +34,7 @@ export default function MatchMaking() {
   }, [router]);
 
   const retouracceuil = ()=>{
+    sessionStorage.removeItem("deck");
     router.push("/acceuil");
   }
 
@@ -63,7 +64,7 @@ export default function MatchMaking() {
       {/* Bouton Retour */}
       <div className="text-center mt-4">
         <button className="btn btn-primary" onClick={retouracceuil}>
-          Retour à l'accueil
+          Accueil
         </button>
       </div>
     </div>

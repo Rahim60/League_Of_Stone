@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {useRouter} from "next/router";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 export default function SignIn() {
     const router = useRouter(); 

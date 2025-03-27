@@ -4,8 +4,9 @@ import Head from "next/head";
 import Link from "next/link";
 import "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Deck from "./components/deck";
-import Champion from "./components/championschoisie";
+import Champion from "@/components/Champions";
+import Deck from "@/components/Deck";
+import MatchMaking from "./matchMaking";
 
 export default function Acceuil() {
   const router = useRouter(); // Initialisation du router
@@ -58,7 +59,7 @@ export default function Acceuil() {
 
   const handleSubmitDeck = () => {
     sessionStorage.setItem("deck", JSON.stringify(decks)); // Stocker le deck
-    router.push("/MatchMaking"); // Redirection avec router
+    router.push("/matchMaking"); // Redirection avec router
   };
 
   return (
@@ -94,15 +95,6 @@ export default function Acceuil() {
         <section style={{ flex: 1, padding: "20px" }}>
           <h2 style={{ textAlign: "center", color: "gray" }}>Mon deck</h2>
           <Deck toutleschampions={decks} deplacer={supprimer} />
-
-          {/* Affichage des cartes côte à côte */}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px" }}>
-            {decks.map((card) => (
-              <div key={card.id} style={{ width: "100px", height: "150px", backgroundColor: "#ddd", textAlign: "center" }}>
-                <p>{card.name}</p>
-              </div>
-            ))}
-          </div>
 
           {/* Affichage du bouton "Valider le deck" */}
           {decks.length === 20 && (
