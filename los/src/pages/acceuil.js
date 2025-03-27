@@ -41,8 +41,10 @@ export default function Acceuil() {
   }, []);
 
   const deplacer = (x) => {
-    setChampions((champions) => champions.filter((cha) => cha.id !== x.id));
-    setDecks((c) => [...c, x]);
+    if (decks.length < 20) {
+      setChampions((champions) => champions.filter((cha) => cha.id !== x.id));
+      setDecks((c) => [...c, x]);
+    }
   };
 
   const supprimer = (x) => {
@@ -97,7 +99,7 @@ export default function Acceuil() {
           <Deck toutleschampions={decks} deplacer={supprimer} />
 
           {/* Affichage du bouton "Valider le deck" */}
-          {decks.length === 20 && (
+          {decks.length >= 20 && (
             <div className="text-center mt-3">
               <button className="btn btn-success" onClick={handleSubmitDeck}>
                 Valider le deck
