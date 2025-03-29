@@ -4,28 +4,24 @@ export const useFetchGet = (url, token) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const result = await response.json();
-                setData(result);
-            } catch (err) {
-                setError(err.message);
-            }
-        };
+    const fetchData = async () => {
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const result = await response.json();
+            setData(result);
+        } catch (err) {
+            setError(err.message);
+        }
+    };
 
-        fetchData();
-    }, [url, token]);
-
-    return { data, error };
+    return { data, fetchData, error };
 };
 
 
@@ -41,7 +37,7 @@ export const useFetchAPI = (url, method, token) => {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
-                body : body ? JSON.stringify(body) : null,
+                body : body ? JSON.stringify(body) : {},
             });
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const result = await response.json();

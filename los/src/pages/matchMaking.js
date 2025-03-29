@@ -26,75 +26,60 @@ const MatchMaking = () => {
     if (!storedDeck || !storedToken) router.push("/signin");
   }, []);
 
-  const joinQueue = async () => {
-    const res = await fetch("http://localhost:3001/users/amIConnected", {
-      method : "GET",
-      headers: {
-        'Authorization': token
-      }
-    });
-    const data = await res.json();
-    !data?.connectedUser && setError("Not connected on the server");
-    console.log(data)
-
-    try{
-      const response = await fetch("http://localhost:3001/matchmaking/participate", {
-        method : "GET",
-        headers: {
-          'Authorization': token
-        }
-      });
-      if (!response.ok) throw new Error("Erreur lors de la connexion à /matchmaking/participate");
-    }catch(err){ 
-      setError(err.message);
-    }
-
-    console.log(error)
-  }
+  const joinQueue = async () => router.push("/liste-attente")
 
   const retourAccueil = () => {
     sessionStorage.removeItem("deck");
     router.push("/acceuil");
   }
 
-  return (
-    <div className="image">
-      <div className="container py-5 ">
-        {/* Section d'en-tête */}
-        <div className="row mb-4">
-          <div className="col-12 text-center">
-            <h1 className="display-4 text-primary">Deck Choisi</h1>
-            <p className="lead text-muted">{username}</p>
-          </div>
-        </div>
+  const handleLogout = () => {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("name");
+    router.push("/signin"); // Redirection avec router
+    sessionStorage.clear();
+  };
 
-        {/* Section pour afficher les cartes */}
-        <h2 className="text-center text-secondary mb-4">Votre Deck :</h2>
-        <div className="cards-container" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+  return (
+    <div >
+      <nav className="navbar bg-dark text-white p-3 d-flex justify-content-between">
+        <h2 className="lead">League Of Stones</h2>
+
+        <h2 className="text-center">Deck Selectionné</h2>
+        {username && (
+          <div className="d-flex align-items-center">
+            <span className="fw-bold mr-3 col-4">{username} </span>
+            <button className="btn btn-danger" onClick={handleLogout}>
+              Déconnexion
+            </button>
+          </div>
+        )}
+      </nav>
+      <div className="container py-5">
+        <div className="row">
           {deck.length > 0 ? (
-            <Deck toutleschampions={deck} deplacer={() => {}} />
+            <Deck toutleschampions={deck} deplacer={() => { }} />
           ) : (
-            <p>Aucune carte dans le deck.</p>
+            <p className="text-muted text-center fs-5">Aucune carte dans le deck.</p>
           )}
         </div>
 
-        {/* Bouton Retour */}
-        <div className="container">
-          <div className="text-center mt-4">
-            <div className="row">
-              <button className="btn btn-primary col-3" onClick={retourAccueil}>
-                Accueil
-              </button>
+        {/* Buttons Section */}
+        <div className="row justify-content-center mt-4">
+          <div className="col-md-6 d-flex justify-content-center gap-3">
+            <button className="btn btn-outline-primary btn-lg" onClick={retourAccueil}>
+              Accueil
+            </button>
 
-              <button className="btn btn-success col-3" onClick={joinQueue}>
-                Rejoindre la liste d'attente
-              </button>
-            </div>
-
+            <button className="btn btn-success btn-lg" onClick={joinQueue}>
+              Rejoindre la file d&apos;attente
+            </button>
           </div>
         </div>
       </div>
     </div>
+
+
   );
 }
 

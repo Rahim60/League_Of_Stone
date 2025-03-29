@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useRouter } from "next/router";
 
 export default function Inscription() {
     const [formData, setFormData] = useState({
@@ -8,6 +9,8 @@ export default function Inscription() {
         password: "",
         confirmPassword: ""
     });
+
+    const router = useRouter();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,63 +49,80 @@ export default function Inscription() {
     };
 
     return (
-        <div className="container d-flex justify-content-center align-items-center vh-100 image_arriere_plan">
-            <div className="card p-4 bg-dark text-white shadow-lg rounded w-50">
-                <h2 className="text-center mb-4">INSCRIPTION</h2>
-                <form onSubmit={senduserdata}>
-                    <div className="mb-3">
-                        <label className="form-label">Pseudo</label>
-                        <input 
-                            type="text" 
-                            name="username" 
-                            className="form-control"
-                            value={formData.username} 
-                            onChange={handleChange} 
-                            required 
-                        />
-                    </div>
+        <>
+            <nav className="navbar bg-dark text-white p-3 d-flex justify-content-between">
+                <h2>League Of Stones</h2>
 
-                    <div className="mb-3">
-                        <label className="form-label">Email</label>
-                        <input 
-                            type="email" 
-                            name="email" 
-                            className="form-control"
-                            value={formData.email} 
-                            onChange={handleChange} 
-                            required 
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Mot de passe</label>
-                        <input 
-                            type="password" 
-                            name="password" 
-                            className="form-control"
-                            value={formData.password} 
-                            onChange={handleChange} 
-                            required 
-                        />
-                    </div>
-
-                    <div className="mb-3">
-                        <label className="form-label">Confirmer le mot de passe</label>
-                        <input 
-                            type="password" 
-                            name="confirmPassword" 
-                            className="form-control"
-                            value={formData.confirmPassword} 
-                            onChange={handleChange} 
-                            required 
-                        />
-                    </div>
-
-                    <button type="submit" className="btn btn-outline-light w-100">
-                        Soumettre
+                <div className="d-flex align-items-center">
+                    <button className="btn btn-outline-light" onClick={() => router.push("/signin")}>
+                        Connexion
                     </button>
-                </form>
+                </div>
+            </nav>
+
+            <div className="container mt-5 d-flex justify-content-center">
+                <div className="card p-4 shadow-lg rounded w-50 ">
+                    <h2 className="text-center mb-4">INSCRIPTION</h2>
+                    <form onSubmit={senduserdata}>
+                        <div className="mb-3">
+                            <label className="form-label">Pseudo</label>
+                            <input
+                                type="text"
+                                name="username"
+                                className="form-control"
+                                value={formData.username}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                className="form-control"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">Mot de passe</label>
+                            <input
+                                type="password"
+                                name="password"
+                                className="form-control"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">Confirmer le mot de passe</label>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                className="form-control"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="w-100 text-center">
+                            <button type="submit" className="btn btn-success">
+                                Soumettre
+                            </button>    
+                        </div>
+                        
+
+                    </form>
+                </div>
             </div>
-        </div>
+        </>
+
     );
 }

@@ -56,51 +56,65 @@ export default function SignIn() {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100 bg-dark">
-            <div className="bg-secondary text-white p-4 rounded-4 w-50">
-                {/* Titre Connexion */}
-                <div className="text-center mb-3">
-                    <h2 className="bg-dark text-white py-2 px-5 rounded-pill d-inline-block">
-                        CONNEXION
-                    </h2>
+        <>
+            <nav className="navbar bg-dark text-white p-3 d-flex justify-content-between">
+                <h2> League Of Stones</h2>
+                <div className="d-flex align-items-center">
+                    <button className="btn btn-outline-light" onClick={() => router.push("/inscription")}>
+                        Creer un Compte
+                    </button>
                 </div>
+            </nav>
 
-                {/* Formulaire */}
-                <form onSubmit={loginuser}>
-                    {/* Champ Email */}
-                    <div className="mb-3">
-                        <label className="form-label fw-bold fs-5">Email :</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                            className="form-control rounded-pill bg-light text-dark"
-                        />
-                    </div>
+            <div className="d-flex justify-content-center align-items-center vh-100 ">
+                {/* <div className=" text-white p-4 rounded-4 "> */}
+                    {/* Titre Connexion */}
 
-                    {/* Champ Mot de Passe */}
-                    <div className="mb-3">
-                        <label className="form-label fw-bold fs-5">Mot de passe :</label>
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            className="form-control rounded-pill bg-light text-dark"
-                        />
-                    </div>
+                    {/* Formulaire */}
+                <form onSubmit={loginuser} className="border border-3 p-3 w-50 rounded shadow-lg">
 
-                    {/* Bouton de Soumission */}
-                    <div className="text-center">
-                        <button type="submit" className="btn btn-primary fw-bold">
-                            Soumettre
-                        </button>
-                    </div>
-                </form>
+                        <div className="text-center mb-3 ">
+                            <h2 className="rounded">
+                                CONNEXION
+                            </h2>
+                        </div>
+
+                        {/* Champ Email */}
+                        <div className="mb-3">
+                            <label className="form-label fs-5">Email :</label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                required
+                                className="form-control rounded border-3"
+                            />
+                        </div>
+
+                        {/* Champ Mot de Passe */}
+                        <div className="mb-3">
+                            <label className="form-label fs-5">Mot de passe :</label>
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            className="form-control rounded border-3"
+                            />
+                        </div>
+
+                        {/* Bouton de Soumission */}
+                        <div className="text-center">
+                            <button type="submit" className="btn btn-success">
+                                Soumettre
+                            </button>
+                        </div>
+                    </form>
+                {/* </div> */}
             </div>
-        </div>
+        </>
+        
     );
 }

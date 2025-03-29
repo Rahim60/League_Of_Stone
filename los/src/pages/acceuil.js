@@ -93,7 +93,14 @@ export default function Acceuil() {
         </section>
 
         <section style={{ flex: 1, padding: "20px" }}>
-          <h2 style={{ textAlign: "center", color: "gray" }}>Mon deck</h2>
+          <h2  style={{ textAlign: "center" }}>Mon deck</h2>
+
+
+          {/* Nombre de cartes dans le deck */}
+          <div className="text-center mt-3">
+            <p>Cartes dans le deck : {decks.length}/20</p>
+          </div>
+
           <Deck toutleschampions={decks} deplacer={supprimer} />
 
           {/* Affichage du bouton "Valider le deck" */}
@@ -105,10 +112,6 @@ export default function Acceuil() {
             </div>
           )}
 
-          {/* Nombre de cartes dans le deck */}
-          <div className="text-center mt-3">
-            <p>Cartes dans le deck : {decks.length}/20</p>
-          </div>
         </section>
       </main>
     </div>
