@@ -5,8 +5,22 @@ const API_URL = "http://localhost:3000/matchmaking";
 
 const ListeAttente = () => {
     const [players, setPlayers] = useState([]);
+    const [username, setUsername] = useState("");
+
     const [userMatchmakingId, setUserMatchmakingId] = useState(null);
     const [error, setError] = useState("");
+
+    const storedName = sessionStorage.getItem("name");
+    useEffect(() => {
+        if (storedName) setUsername(storedName);
+    }, [])
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("name");
+        router.push("/signin"); // Redirection avec router
+        sessionStorage.clear();
+    };
 
     // Function to join matchmaking
     const joinMatchmaking = async () => {
@@ -53,43 +67,59 @@ const ListeAttente = () => {
     }, []);
 
     return (
-        <div className="container mt-4">
-            <h2 className="text-center">Liste d&apos;Attente</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
-            <table className="table table-bordered">
-                <thead className="table-dark">
-                    <tr>
-                        <th>Nom</th>
-                        <th>Email</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {players.length > 0 ? (
-                        players.map((player) =>
-                            player.matchmakingId !== userMatchmakingId ? (
-                                <tr key={player.matchmakingId}>
-                                    <td>{player.name}</td>
-                                    <td>{player.email}</td>
-                                    <td>
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={() => sendRequest(player.matchmakingId)}
-                                        >
-                                            Inviter à jouer
-                                        </button>
-                                    </td>
-                                </tr>
-                            ) : null
-                        )
-                    ) : (
+        <>
+            <nav className="navbar bg-dark text-white p-3 d-flex justify-content-between">
+                <h2>League Of Stones</h2>
+
+                {username && (
+                <div className="d-flex align-items-center">
+                    <span className="fw-bold mr-3 col-4">{username} </span>
+                    <button className="btn btn-danger" onClick={handleLogout}>
+                    Déconnexion
+                    </button>
+                </div>
+                )}
+            </nav>
+            
+            <div className="container mt-4">
+                <h2 className="text-center">Liste d&apos;Attente</h2>
+                {error && <div className="alert alert-danger">{error}</div>}
+                <table className="table table-bordered">
+                    <thead className="table-dark">
                         <tr>
-                            <td colSpan="3" className="text-center">Aucun joueur en attente...</td>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Action</th>
                         </tr>
-                    )}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {players.length > 0 ? (
+                            players.map((player) =>
+                                player.matchmakingId !== userMatchmakingId ? (
+                                    <tr key={player.matchmakingId}>
+                                        <td>{player.name}</td>
+                                        <td>{player.email}</td>
+                                        <td>
+                                            <button
+                                                className="btn btn-primary"
+                                                onClick={() => sendRequest(player.matchmakingId)}
+                                            >
+                                                Inviter à jouer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ) : null
+                            )
+                        ) : (
+                            <tr>
+                                <td colSpan="3" className="text-center">Aucun joueur en attente...</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </>
+       
     );
 };
 

@@ -8,7 +8,7 @@ export default function Carte({ info , deplacer }) {
     }
 
     return (
-      <div className="card m-3" style={{ width: "18rem", }} onClick={() => { deplacer(info) }}>
+      <div className="card m-3 shadow" style={{ width: "18rem", }} onClick={() => { deplacer(info) }}>
         <img className="card-img-top mt-2"
           src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${info.key}_0.jpg`} alt={info.name}
           style={{ width: "100%", height: "auto", borderRadius: "10px" }}/>

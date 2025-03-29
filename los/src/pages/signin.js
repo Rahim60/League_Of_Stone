@@ -67,11 +67,9 @@ export default function SignIn() {
             </nav>
 
             <div className="d-flex justify-content-center align-items-center vh-100 ">
-                {/* <div className=" text-white p-4 rounded-4 "> */}
-                    {/* Titre Connexion */}
 
                     {/* Formulaire */}
-                <form onSubmit={loginuser} className="border border-3 p-3 w-50 rounded shadow-lg">
+                <form onSubmit={loginuser} className="border border-2 p-3 w-50 rounded shadow-lg">
 
                         <div className="text-center mb-3 ">
                             <h2 className="rounded">
