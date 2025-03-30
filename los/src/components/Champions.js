@@ -3,8 +3,8 @@ export default function Champions({toutleschampions, deplacer}){
 
 
     return(
-        <div class="container text-center">
-            <div class="row justify-content-center">
+        <div className="container text-center">
+            <div className="row justify-content-center">
                 {toutleschampions.map((champ) => (
                     <Carte key={champ.id} info={champ} deplacer={deplacer} />
                 ))}

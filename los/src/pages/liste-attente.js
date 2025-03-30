@@ -6,31 +6,53 @@ const API_URL = "http://localhost:3001/matchmaking";
 const ListeAttente = () => {
     const [players, setPlayers] = useState([]);
     const [username, setUsername] = useState("");
-
-    const [userMatchmakingId, setUserMatchmakingId] = useState(null);
+    const [userMatchmakingId, setUserMatchmakingId] = useState("");
+    const [request, setRequest] = useState([]);
     const [error, setError] = useState("");
-
-    
-    useEffect(() => {
-        const storedName = sessionStorage.getItem("name");
-        if (storedName) setUsername(storedName);
-    }, [])
+    const [token, setToken] = useState("");
 
     const handleLogout = () => {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("name");
-        router.push("/signin"); // Redirection avec router
         sessionStorage.clear();
+        window.location.href = "/signin"; // Redirection
     };
+
+    useEffect(() => {  
+        if (typeof window !== "undefined") {
+            const storedToken = sessionStorage.getItem("token");
+            const storedName = sessionStorage.getItem("name");
+            if (storedToken) setToken(storedToken);
+            if (storedName) setUsername(storedName);
+        }
+    }, []);
+
+    // Exécuter ces fonctions UNIQUEMENT quand token est mis à jour
+    useEffect(() => {
+        if (!token) return;
+        console.log("Token mis à jour :", token); // Vérifie si le token est bien récupéré
+        
+        joinMatchmaking();
+         
+        const interval = setInterval(fetchPlayers, 10000);
+        return () => {clearInterval(interval);clearInterval(inter);}
+    },[token]); // Ajoute token comme dépendance
 
     // Function to join matchmaking
     const joinMatchmaking = async () => {
         try {
-            const response = await fetch(`${API_URL}/participate`, { method: "GET", authorization: `Bearer ${sessionStorage.getItem("token")}` });
+            const response = await fetch(`${API_URL}/participate`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             if (!response.ok) throw new Error("Erreur lors de la participation");
             const data = await response.json();
+            console.log("Données de matchmaking :", data);
             setUserMatchmakingId(data.matchmakingId);
-            fetchPlayers(); 
+            setRequest(data.request);
         } catch (err) {
             setError(err.message);
         }
@@ -39,46 +61,33 @@ const ListeAttente = () => {
     // Function to fetch players
     const fetchPlayers = async () => {
         try {
-            const response = await fetch(`${API_URL}/getAll`, { method: "GET", authorization: `Bearer ${sessionStorage.getItem("token")}` });
+            const response = await fetch(`${API_URL}/getAll`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            });
             if (!response.ok) throw new Error("Erreur lors de la récupération des joueurs");
             const data = await response.json();
+            console.log("Liste des joueurs :", data); 
             setPlayers(data);
         } catch (err) {
             setError(err.message);
         }
     };
 
-    // Function to send a request to play
-    const sendRequest = async (matchmakingId) => {
-        try {
-            const response = await fetch(`${API_URL}/request?matchmakingId=${matchmakingId}`, {
-                method: "GET",
-            });
-            if (!response.ok) throw new Error("Erreur lors de l'envoi de la requête");
-            alert("Requête envoyée !");
-        } catch (err) {
-            setError(err.message);
-        }
-    };
-
-    useEffect(() => {
-        joinMatchmaking(); 
-        const interval = setInterval(fetchPlayers, 5000);
-        return () => clearInterval(interval); 
-    }, []);
-
     return (
         <>
             <nav className="navbar bg-dark text-white p-3 d-flex justify-content-between">
                 <h2>League Of Stones</h2>
-
                 {username && (
-                <div className="d-flex align-items-center">
-                    <span className="fw-bold mr-3 col-4">{username} </span>
-                    <button className="btn btn-danger" onClick={handleLogout}>
-                    Déconnexion
-                    </button>
-                </div>
+                    <div className="d-flex align-items-center">
+                        <span className="fw-bold mr-3 col-4">{username}</span>
+                        <button className="btn btn-danger" onClick={handleLogout}>
+                            Déconnexion
+                        </button>
+                    </div>
                 )}
             </nav>
             
@@ -120,7 +129,6 @@ const ListeAttente = () => {
                 </table>
             </div>
         </>
-       
     );
 };
 

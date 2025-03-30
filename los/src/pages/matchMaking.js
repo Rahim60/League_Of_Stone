@@ -8,8 +8,6 @@ import Deck from "@/components/Deck";
 const MatchMaking = () => {
   const [deck, setDeck] = useState([]);
   const [username, setUsername] = useState("");
-  const [token, setToken] = useState("");
-  const [error, setError] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -20,11 +18,10 @@ const MatchMaking = () => {
 
     if (storedDeck) setDeck(JSON.parse(storedDeck))
     if (storedName) setUsername(storedName);
-    if (storedToken) setToken(storedToken);
 
     // Si aucune donnée n'est trouvée, rediriger vers la page d'accueil ou de connexion
     if (!storedDeck || !storedToken) router.push("/signin");
-  }, []);
+  }, [router]); // Dépendance sur router pour éviter les avertissements
 
   const joinQueue = async () => router.push("/liste-attente")
 
