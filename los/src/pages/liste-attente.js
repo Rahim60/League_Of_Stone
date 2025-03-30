@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const API_URL = "http://localhost:3000/matchmaking";
+const API_URL = "http://localhost:3001/matchmaking";
 
 const ListeAttente = () => {
     const [players, setPlayers] = useState([]);
@@ -10,8 +10,9 @@ const ListeAttente = () => {
     const [userMatchmakingId, setUserMatchmakingId] = useState(null);
     const [error, setError] = useState("");
 
-    const storedName = sessionStorage.getItem("name");
+    
     useEffect(() => {
+        const storedName = sessionStorage.getItem("name");
         if (storedName) setUsername(storedName);
     }, [])
 
@@ -25,7 +26,7 @@ const ListeAttente = () => {
     // Function to join matchmaking
     const joinMatchmaking = async () => {
         try {
-            const response = await fetch(`${API_URL}/participate`, { method: "GET" });
+            const response = await fetch(`${API_URL}/participate`, { method: "GET", authorization: `Bearer ${sessionStorage.getItem("token")}` });
             if (!response.ok) throw new Error("Erreur lors de la participation");
             const data = await response.json();
             setUserMatchmakingId(data.matchmakingId);
@@ -38,7 +39,7 @@ const ListeAttente = () => {
     // Function to fetch players
     const fetchPlayers = async () => {
         try {
-            const response = await fetch(`${API_URL}/getAll`, { method: "GET" });
+            const response = await fetch(`${API_URL}/getAll`, { method: "GET", authorization: `Bearer ${sessionStorage.getItem("token")}` });
             if (!response.ok) throw new Error("Erreur lors de la récupération des joueurs");
             const data = await response.json();
             setPlayers(data);

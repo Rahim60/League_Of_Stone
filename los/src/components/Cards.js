@@ -12,8 +12,8 @@ export default function Carte({ info , deplacer }) {
         <img className="card-img-top mt-2"
           src={`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${info.key}_0.jpg`} alt={info.name}
           style={{ width: "100%", height: "auto", borderRadius: "10px" }}/>
-        <div class="card-body">
-          <h5 class="card-title">{info.name} </h5>
+        <div className="card-body">
+          <h5 className="card-title">{info.name} </h5>
         </div>
 
         <ul className="list-group list-group-flush">
