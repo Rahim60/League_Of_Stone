@@ -32,9 +32,8 @@ const ListeAttente = () => {
         if (!token) return;
         console.log("Token mis à jour :", token); // Vérifie si le token est bien récupéré
         
-        joinMatchmaking();
-         
-        const interval = setInterval(fetchPlayers, 10000);
+        const inter = setInterval(joinMatchmaking, 5000);
+        const interval = setInterval(fetchPlayers, 5000);
         return () => {clearInterval(interval);clearInterval(inter);}
     },[token]); // Ajoute token comme dépendance
 
@@ -45,7 +44,7 @@ const ListeAttente = () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "www-authenticate": token
                 }
             });
             if (!response.ok) throw new Error("Erreur lors de la participation");
@@ -65,7 +64,7 @@ const ListeAttente = () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
+                    "www-authenticate": token
                 }
             });
             if (!response.ok) throw new Error("Erreur lors de la récupération des joueurs");
@@ -76,6 +75,23 @@ const ListeAttente = () => {
             setError(err.message);
         }
     };
+    const sendRequest = async () => {
+        try {
+            const response = await fetch(`${API_URL}/request?matchmakingId=${userMatchmakingId}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "www-authenticate": token
+                }
+            });
+            if (!response.ok) throw new Error("Erreur lors de l'envoi de la demande");
+            const data = await response.json();
+            console.log("Demande envoyée :", data);
+            setRequest(data.request);
+        } catch (err) {
+            setError(err.message);
+        }
+    }
 
     return (
         <>
