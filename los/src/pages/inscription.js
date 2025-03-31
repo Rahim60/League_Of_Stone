@@ -10,9 +10,7 @@ export default function Inscription() {
         password: "", confirmPassword: ""
     });
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
     const senduserdata = (e) => {
         e.preventDefault();
@@ -26,8 +24,7 @@ export default function Inscription() {
             name: formData.username,
             email: formData.email,
             password: formData.password
-        })
-            .then(({ data }) => alert("Inscription réussie !"))
+        }).then(({ data }) => alert("Inscription réussie !"))
             .catch(({ message }) => console.error("Erreur lors de la requête :", message))
     };
 

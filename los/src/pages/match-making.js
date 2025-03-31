@@ -13,36 +13,29 @@ const MatchMaking = () => {
     const router = useRouter();
 
     // Function to join matchmaking
-    const joinMatchmaking = () => {
+    const joinMatchmaking = () =>
         axios.get(`/matchmaking/participate`).then(({ data }) => {
             setUserMatchmakingId(data?.matchmakingId);
             fetchPlayers();
         }).catch(({ message }) => setError(message))
-    };
-
 
     // Function to fetch players
-    const fetchPlayers = () => {
-        axios.get(`/matchmaking/getAll`).then(({ data }) => setPlayers(data)).catch(({ message }) => setError(message))
-    };
+    const fetchPlayers = () => axios.get(`/matchmaking/getAll`).then(({ data }) => setPlayers(data)).catch(({ message }) => setError(message))
 
     // Function to send a request to play
-    const sendRequest = (matchmakingId) => {
+    const sendRequest = (matchmakingId) =>
         axios.get(`/request?matchmakingId=${matchmakingId}`).then(({ data }) => alert("Requête envoyée !")).
             catch(({ message }) => setError(message))
-    };
 
     // Add accept request logic upon request received
-    const acceptRequest = (matchmakingId) => {
+    const acceptRequest = (matchmakingId) => 
         axios.get(`/acceptRequest?matchmakingId=${matchmakingId}`).then(({ data }) => alert("Match calé !"))
             .then(() => router.push("/game")).catch(({ message }) => setError(message))
-    };
 
     useEffect(() => {
         joinMatchmaking();
         return () => clearInterval(setInterval(fetchPlayers, 5000));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [router]);
 
 
     return (

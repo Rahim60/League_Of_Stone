@@ -15,12 +15,11 @@ export default function Home() {
     password: ""
   });
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
   const loginuser = (e) => {
     e.preventDefault();
+
     axios.post(`/login`, {
       email: formData.email,
       password: formData.password
@@ -78,7 +77,6 @@ export default function Home() {
             </button>
           </div>
         </form>
-        {/* </div> */}
       </div>
     </>
 

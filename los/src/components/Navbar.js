@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 const Navbar = ({title}) => {
 
     const [username, setUsername] = useState("");
-        useEffect(() => {
-            const storedName = sessionStorage.getItem("name");
-            storedName && setUsername(storedName);
-        }, [])
+    useEffect(() => {
+        const storedName = sessionStorage.getItem("name");
+        storedName && setUsername(storedName);
+    }, [])
 
     const router = useRouter();
     

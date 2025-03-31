@@ -23,7 +23,7 @@ export default function Accueil() {
     }
     // Charger les champions depuis l'API
     axios.get(`/cards`).then(({ data }) => setChampion(data)).catch(err => console.log(err))
-  }, []);
+  }, [router]);
 
   const deplacer = (newChamp) => {
     if (deck.length < 20) {

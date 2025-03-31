@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-const NavbarDeb = ({action}) => {
+const NavbarDeb = ({ action }) => {
 
     const router = useRouter();
 
