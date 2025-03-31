@@ -1,13 +1,15 @@
-import Carte from "./Cards";
+import Card from "./Card";
 
-export default function Deck({ toutleschampions, deplacer }) {
+const Deck = ({ handleAjoutADeck, deck }) => {
   return (
     <div className="container text-center">
       <div className="row justify-content-center">
-        {toutleschampions.map((champ) => (
-          <Carte key={champ.id} info={champ} deplacer={deplacer} />
+        {deck.map((champ) => (
+          <Card key={champ.id} info={champ} deplacer={handleAjoutADeck} />
         ))}
       </div>
     </div>
   );
 }
+
+export default Deck;

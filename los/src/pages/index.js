@@ -1,10 +1,38 @@
 import Head from "next/head";
-import "../styles/Home.module.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Link from "next/link";
+import NavbarDeb from "@/components/NavbarDeb";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import axios from "axios";
+
 
 
 export default function Home() {
+
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const loginuser = (e) => {
+    e.preventDefault();
+    axios.post(`/login`, {
+      email: formData.email,
+      password: formData.password
+    }).then(({ data }) => {
+      sessionStorage.setItem("token", data?.token);
+      sessionStorage.setItem("name", data?.name);
+    }).catch(({ message }) => console.log(message))
+
+    //redirection vers la page pour choisir son deck 
+    router.push("/accueil");
+  };
+
   return (
     <>
       <Head>
@@ -13,16 +41,47 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="text-center color">
-      <h1>League Of Stones</h1>
-      <nav>
-      <ul>
-        <Link href={"./signin"}>Connexion</Link>
-        <Link href={"./inscription"}>Inscription</Link>
-      </ul>
-      </nav>
-      </div>
 
+      <NavbarDeb action={"Creer un Compte"} />
+
+      <div className="d-flex justify-content-center align-items-center vh-100 ">
+
+        {/* Formulaire */}
+        <form onSubmit={loginuser} className="border border-2 p-3 w-50 rounded shadow-lg">
+
+          <div className="text-center mb-3 ">
+            <h2 className="rounded">
+              CONNEXION
+            </h2>
+          </div>
+
+          {/* Champ Email */}
+          <div className="mb-3">
+            <label className="form-label fs-5">Email :</label>
+            <input
+              type="email" name="email" value={formData.email}
+              onChange={handleChange} required className="form-control rounded border-3" />
+          </div>
+
+          {/* Champ Mot de Passe */}
+          <div className="mb-3">
+            <label className="form-label fs-5">Mot de passe :</label>
+            <input
+              type="password" name="password" value={formData.password}
+              onChange={handleChange} required className="form-control rounded border-3" />
+          </div>
+
+          {/* Bouton de Soumission */}
+          <div className="text-center">
+            <button type="submit" className="btn btn-success">
+              Se Connecter
+            </button>
+          </div>
+        </form>
+        {/* </div> */}
+      </div>
     </>
+
   );
+
 }

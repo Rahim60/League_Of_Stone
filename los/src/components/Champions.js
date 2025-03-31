@@ -1,13 +1,13 @@
-import Carte from "./Cards";
-export default function Champions({toutleschampions, deplacer}){
+import Card from "./Card";
+export default function Champions({ champions, handleAjoutAChampions }) {
 
-
-    return(
+    return (
         <div className="container text-center">
             <div className="row justify-content-center">
-                {toutleschampions.map((champ) => (
-                    <Carte key={champ.id} info={champ} deplacer={deplacer} />
+                {champions.map((champ) => (
+                    <Card key={champ.id} info={champ} deplacer={handleAjoutAChampions} />
                 ))}
             </div>
         </div>
-    );}
+    );
+}
