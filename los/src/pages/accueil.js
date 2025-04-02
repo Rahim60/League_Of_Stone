@@ -19,7 +19,7 @@ export default function Accueil() {
     // Vérifier et récupérer le token + username
     if (!sessionStorage.getItem("token") && !sessionStorage.getItem("name")) {
       console.warn("Aucun token trouvé, redirection vers la connexion...");
-      router.push("/"); // Redirige vers la page de connexion
+      router.push("/");
     }
     // Charger les champions depuis l'API
     axios.get(`/cards`).then(({ data }) => setChampion(data)).catch(err => console.log(err))
