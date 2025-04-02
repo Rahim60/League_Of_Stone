@@ -3,10 +3,6 @@ import Champion from "./Champions";
 
 export default function Carte({ info , deplacer }) {
 
-    const champchoisie=()=>{
-
-    }
-
     return (
       <div className="card m-3 shadow" style={{ width: "18rem", }} onClick={() => { deplacer(info) }}>
         <img className="card-img-top mt-2"

@@ -19,6 +19,7 @@ export default function Home() {
       <ul>
         <Link href={"./signin"}>Connexion</Link>
         <Link href={"./inscription"}>Inscription</Link>
+        <Link href={"./game/prototype"}>Jouer</Link>
       </ul>
       </nav>
       </div>

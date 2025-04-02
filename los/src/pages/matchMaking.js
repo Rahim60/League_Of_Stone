@@ -24,6 +24,7 @@ const MatchMaking = () => {
   }, [router]); // Dépendance sur router pour éviter les avertissements
 
   const joinQueue = async () => router.push("/liste-attente")
+  const battle = async () => router.push("/game/prototype");
 
   const retourAccueil = () => {
     sessionStorage.removeItem("deck");
@@ -70,6 +71,9 @@ const MatchMaking = () => {
 
             <button className="btn btn-success btn-lg" onClick={joinQueue}>
               Rejoindre la file d&apos;attente
+            </button>
+            <button className="btn btn-danger btn-lg" onClick={battle}>
+              combat
             </button>
           </div>
         </div>
