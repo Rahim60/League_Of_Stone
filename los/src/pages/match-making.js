@@ -10,6 +10,7 @@ const MatchMaking = () => {
     const [userMatchmakingId, setUserMatchmakingId] = useState([]);
     const [requests, setRequests] = useState([]); // res de la liste d'attente
 
+    const [success, setSucess] = useState("");
     const [error, setError] = useState("");
 
     const router = useRouter();
@@ -22,8 +23,8 @@ const MatchMaking = () => {
             fetchPlayers();
 
             data?.request && setRequests(data?.request);
-        }).catch(({ message }) => setError(message)), []
-    )
+        }).catch(({ message }) => setError(message))
+    , [])
 
     // Function to fetch players dans la liste d'attente
     const fetchPlayers = useCallback(() =>
@@ -41,7 +42,7 @@ const MatchMaking = () => {
 
     // Function to send a request to play contre un joueur precis
     const sendRequest = (matchmakingId) => {
-        axios.get(`/matchmaking/request?matchmakingId=${matchmakingId}`).then(({ data }) => alert("Requête envoyée !")).
+        axios.get(`/matchmaking/request?matchmakingId=${matchmakingId}`).then(({ data }) => setSucess("Requête envoyée !")).
             catch(({ message }) => setError(message))
         
         !error && setPlayers(prevState => prevState.map(player => player?.matchmakingId == matchmakingId ? { ...player, isSent: true } : player))
@@ -50,7 +51,8 @@ const MatchMaking = () => {
     // Add accept request logic upon request received
     const acceptRequest = (matchmakingId) =>
         axios.get(`/matchmaking/acceptRequest?matchmakingId=${matchmakingId}`).then(({ data }) => {
-            alert("Match calé !")
+            setSucess("Match calé !")
+            sessionStorage.setItem("activeMatch", JSON.stringify(data))
             if (!error) router.push("/game")
         }).catch(({ message }) => setError(message))
 
@@ -80,8 +82,8 @@ const MatchMaking = () => {
 
             <div className="container mt-4">
                 <h2 className="text-center">Match Making</h2>
-
-                {error && <div className="alert alert-danger">{error}</div>}
+                {success && <p className="alert alert-success">{success}</p>}
+                {error && <p className="alert alert-danger">{error}</p>}
 
                 <table className="table table-bordered">
                     <thead className="table-dark">

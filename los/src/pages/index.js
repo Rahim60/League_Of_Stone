@@ -14,6 +14,7 @@ export default function Home() {
     email: "",
     password: ""
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
@@ -26,7 +27,7 @@ export default function Home() {
     }).then(({ data }) => {
       sessionStorage.setItem("token", data?.token);
       sessionStorage.setItem("name", data?.name);
-    }).catch(({ message }) => console.log(message))
+    }).catch(({ message }) => setError(message))
 
     //redirection vers la page pour choisir son deck 
     router.push("/accueil");
@@ -46,6 +47,7 @@ export default function Home() {
       <div className="d-flex justify-content-center align-items-center vh-100 ">
 
         {/* Formulaire */}
+        {error && <p className="alert alert-danger">{error}</p>}
         <form onSubmit={loginuser} className="border border-2 p-3 w-50 rounded shadow-lg">
 
           <div className="text-center mb-3 ">

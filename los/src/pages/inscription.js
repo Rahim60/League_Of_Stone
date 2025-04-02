@@ -9,6 +9,7 @@ export default function Inscription() {
         username: "", email: "",
         password: "", confirmPassword: ""
     });
+    const [error, setError] = useState("");
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
@@ -16,7 +17,7 @@ export default function Inscription() {
         e.preventDefault();
 
         if (formData.password !== formData.confirmPassword) {
-            alert("Les mots de passe ne correspondent pas !");
+            setError("Les mots de passe ne correspondent pas !");
             return;
         }
 
@@ -24,8 +25,7 @@ export default function Inscription() {
             name: formData.username,
             email: formData.email,
             password: formData.password
-        }).then(({ data }) => alert("Inscription réussie !"))
-            .catch(({ message }) => console.error("Erreur lors de la requête :", message))
+        }).catch(({ message }) => setError(message))
     };
 
     return (
@@ -35,6 +35,7 @@ export default function Inscription() {
             <div className="container mt-5 d-flex justify-content-center">
                 <div className="card p-4 shadow-lg rounded w-50 ">
                     <h2 className="text-center mb-4">INSCRIPTION</h2>
+                    {error && <p className="alert alert-danger">{error}</p>}
                     <form onSubmit={senduserdata}>
                         <div className="mb-3">
                             <label className="form-label">Pseudo</label>

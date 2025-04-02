@@ -10,6 +10,7 @@ import axios from "axios";
 export default function Accueil() {
   const [champions, setChampion] = useState([]);
   const [deck, setDeck] = useState([]);
+  const [error, setError] = useState("");
 
   // const [data, err, handleFetch] = useFetch();
   const router = useRouter(); // Initialisation du router
@@ -22,7 +23,7 @@ export default function Accueil() {
       router.push("/");
     }
     // Charger les champions depuis l'API
-    axios.get(`/cards`).then(({ data }) => setChampion(data)).catch(err => console.log(err))
+    axios.get(`/cards`).then(({ data }) => setChampion(data)).catch(({ message }) => setError(message))
   }, [router]);
 
   const deplacer = (newChamp) => {
@@ -57,8 +58,11 @@ export default function Accueil() {
       <main style={{ display: "flex" }}>        {/* <--- A verifier */}
         <section style={{ flex: 1, padding: "20px", borderRight: "2px solid black" }}>
           <h2 style={{ color: "orange", textAlign: "center" }}>Les champions disponibles</h2>
-          <div className="cards-container" style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
-            <Champion champions={champions} handleAjoutAChampions={deplacer} />
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+            {!error
+              ? <Champion champions={champions} handleAjoutAChampions={deplacer} />
+              : <p className="alert alert-danger">Erreur lors de la recuperation de champions</p>
+            }
           </div>
         </section>
 

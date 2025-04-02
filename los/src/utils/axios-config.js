@@ -1,7 +1,6 @@
 import axios from "axios";
-import API_URL from "./constants";
 
-axios.defaults.baseURL = API_URL;
+axios.defaults.baseURL = "http://localhost:3001";
 
 axios.interceptors.request.use(
     (config) => {
