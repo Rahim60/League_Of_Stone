@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Deck from "./Deck";
+import DummyDeck from "./DummyCard";
+import DummyCard from "./DummyCard";
 
 const Plateau = () => {
 
@@ -14,22 +16,26 @@ const Plateau = () => {
             {/* Game Board + Player Deck */}
             <div className="col-md-6">
                 {/* Opponent's Deck */}
-                <div className="d-flex justify-content-center mb-3">
-                    <Deck deck={dummy} handleAjoutADeck={() => { }} type={"game"} />
+                <div className="d-flex justify-content-center flex-column mb-3">
+                    <h6 className="lead text-center">Main Adversaire</h6>
+                    {/* <Deck deck={dummy} handleAjoutADeck={() => { }} type={"game"} /> */}
+                    <DummyDeck deck={dummy} />
                 </div>
 
                 {/* Plateau (Game Board) */}
                 <div className="bg-light-subtle border border-secondary rounded shadow text-center">
-                    <Deck deck={dummy2} handleAjoutADeck={() => { }} type={"game"} />
+                    <Deck deck={dummy2} handleAjoutADeck={() => {}} type={"game"} />
                     {/* seperator*/}
                     <hr className="my-4 border-secondary" />
 
-                    <Deck deck={dummy2} handleAjoutADeck={() => { }} type={"game"} />
+                    <Deck deck={dummy2} handleAjoutADeck={() => {}} type={"game"} />
+
                 </div>
 
                 {/* Player's Deck */}
-                <div className="d-flex justify-content-center mt-3">
-                    <Deck deck={dummy} handleAjoutADeck={() => { }} type={"game"} />
+                <div className="d-flex flex-column justify-content-center mt-3">
+                    <Deck deck={dummy} handleAjoutADeck={() => {}} type={"game"} />
+                    <h6 className="lead text-center">Votre Main</h6>
                 </div>
             </div>
         </>

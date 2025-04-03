@@ -10,6 +10,7 @@ export default function Inscription() {
         password: "", confirmPassword: ""
     });
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
 
@@ -29,6 +30,8 @@ export default function Inscription() {
             console.log(message)
             setError("Erreur lors de la creation de compte")
         })
+
+        !error && setSuccess("Compte Crée avec succes")
     };
 
     return (
@@ -39,6 +42,7 @@ export default function Inscription() {
                 <div className="card p-4 shadow-lg rounded w-50 ">
                     <h2 className="text-center mb-4">INSCRIPTION</h2>
                     {error && <p className="alert alert-danger">{error}</p>}
+                    {success && <p className="alert alert-success">{success}</p>}
                     <form onSubmit={senduserdata}>
                         <div className="mb-3">
                             <label className="form-label">Pseudo</label>

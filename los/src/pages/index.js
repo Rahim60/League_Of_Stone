@@ -30,7 +30,7 @@ export default function Home() {
     }).catch(({ message }) => setError(message))
 
     //redirection vers la page pour choisir son deck 
-    router.push("/accueil");
+    !error && router.push("/accueil");
   };
 
   return (
@@ -81,7 +81,6 @@ export default function Home() {
         </form>
       </div>
     </>
-
   );
 
 }
