@@ -21,11 +21,14 @@ export default function Inscription() {
             return;
         }
 
-        axios.post("/user", {
+        axios.put("/user", {
             name: formData.username,
             email: formData.email,
             password: formData.password
-        }).catch(({ message }) => setError(message))
+        }).catch(({ message }) => {
+            console.log(message)
+            setError("Erreur lors de la creation de compte")
+        })
     };
 
     return (

@@ -21,24 +21,24 @@ const MatchMaking = () => {
         axios.get(`/matchmaking/participate`).then(({ data }) => {
             setUserMatchmakingId(data?.matchmakingId)
             fetchPlayers();
-
+            // Recuperer data?.match
             data?.request && setRequests(data?.request);
         }).catch(({ message }) => setError(message))
     , [])
 
     // Function to fetch players dans la liste d'attente
     const fetchPlayers = useCallback(() =>
-        axios.get(`/matchmaking/getAll`)
-            .then(({ data }) => setPlayers((prevData) =>
-                data.map(player => {
-                    const existingPlayer = prevData.find(prevPlayer => prevPlayer?.matchmakingId === player?.matchmakingId);
-                    return {
-                        ...player,
-                        isSent: existingPlayer ? existingPlayer.isSent : false // Preserve or reset
-                    };
-                })
-            )).catch(({ message }) => setError(message))
-        , []);
+        axios.get(`/matchmaking/getAll`).then(({ data }) => setPlayers((prevData) =>
+            data.map(player => {
+                console.log(data)
+                const existingPlayer = prevData.find(prevPlayer => prevPlayer?.matchmakingId === player?.matchmakingId);
+                return {
+                    ...player,
+                    isSent: existingPlayer ? existingPlayer.isSent : false // Preserve or reset
+                };
+            })
+        )).catch(({ message }) => setError(message))
+    , []);
 
     // Function to send a request to play contre un joueur precis
     const sendRequest = (matchmakingId) => {
@@ -54,11 +54,12 @@ const MatchMaking = () => {
             setSucess("Match calé !")
             sessionStorage.setItem("activeMatch", JSON.stringify(data))
             if (!error) router.push("/game")
-        }).catch(({ message }) => setError(message))
+        }).catch(({ message }) => {
+            console.log(message)
+            setError("Erreur lors de la acceptation de l'invitation. Relance ")
+        })
 
     useEffect(() => {
-        console.log(requests)
-
         intervalRef.current = setInterval(() => {
             joinMatchmaking();
             fetchPlayers();
