@@ -1,77 +1,21 @@
-/* Fond du plateau */
-body {
-    background-image: url('https://img.redbull.com/images/c_crop,w_1500,h_750,x_0,y_174,f_auto,q_auto/c_scale,w_1200/redbullcom/2014/10/08/1331683473350_2/league-of-legends-stomp-gaming');
-    background-size: cover;
-    background-position: center;
-  }
-  
-  /* Plateau */
-  .plateau {
-    background: rgba(0, 0, 0, 0.7);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  }
-  
-  /* Portraits des joueurs */
-  .portrait img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid #fff;
-  }
-  
-  /* Cartes */
-  .carte {
-    text-align: center;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.3);
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .carte img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .nom-champion {
-    font-weight: bold;
-    padding: 10px;
-    background: #222;
-    color: white;
-  }
-  
-  /* Effet au survol */
-  .carte:hover {
-    transform: scale(1.1);
-    box-shadow: 5px 5px 15px rgba(255,255,255,0.5);
-  }
-  
-  /* Ligne de séparation */
-  .separator {
-    height: 3px;
-    background-color: white;
-    margin: 20px 0;
-  }
-  
-  /* Animation d'apparition */
-  .carte {
-    opacity: 0;
-    transform: translateX(-100px);
-    animation: apparition 0.5s forwards;
-  }
-  
-  @keyframes apparition {
-    from {
-      opacity: 0;
-      transform: translateX(-100px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-  
+.card-actions {
+  position: relative;
+  z-index: 1000;
+}
+
+.card-in-hand.selected {
+  transform: translateY(-20px) scale(1.05) !important;
+}
+
+.plateau-container {
+  background: linear-gradient(45deg, #1a1a2e, #16213e);
+}
+
+.card-slot {
+  transition: all 0.3s ease;
+}
+
+.card-slot:hover {
+  transform: scale(1.05);
+  border-color: #fff !important;
+}

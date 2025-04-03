@@ -1,55 +1,81 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import Main from "@/components/main";
+import { useState } from "react";
 
-const champions = [
-  { name: "Ivern", img: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ivern_0.jpg" },
-  { name: "Teemo", img: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Teemo_0.jpg" },
-  { name: "Taric", img: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Taric_0.jpg" },
-];
-
-const Plateau = () => {
+const Plateau = ({ main, deplacerCarte, cartesAdversaire1, cartesAdversaire2 }) => {
   return (
-    <div className="container mt-4">
-      <section className="plateau">
-        
-        {/* Partie Adversaire */}
-        <article className="text-center">
-          <div className="portrait">
-            <img src="https://source.unsplash.com/100x100/?avatar1" alt="Adversaire" />
-          </div>
-          <h3 className="text-white">Adversaire</h3>
-        </article>
-        <article className="row justify-content-center">
-          <div className="col-md-4">
-            <div className="carte">
-              <img src={champions[0].img} alt={champions[0].name} />
-              <div className="nom-champion">{champions[0].name}</div>
+    <div className="container-fluid plateau-container" style={{ height: "100vh", padding: "20px" }}>
+      {/* Zone des adversaires */}
+      <div className="row justify-content-between mb-5" style={{ height: "35%" }}>
+        {/* Adversaire 1 */}
+        <div className="col-5">
+          <div className="opponent-zone bg-dark p-3 rounded-3 h-100">
+            <h4 className="text-white mb-3">Adversaire 1</h4>
+            <div className="d-flex gap-2 flex-wrap">
+              {Array(5).fill().map((_, index) => (
+                <div key={index} className="card-slot" style={{
+                  width: "100px",
+                  height: "140px",
+                  border: "2px dashed #666",
+                  borderRadius: "8px",
+                  background: "rgba(255,255,255,0.1)"
+                }}>
+                  {cartesAdversaire1?.[index] && (
+                    <img 
+                      src={cartesAdversaire1[index].img} 
+                      alt={cartesAdversaire1[index].name}
+                      className="w-100 h-100"
+                      style={{ borderRadius: "6px", objectFit: "cover" }}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-        </article>
+        </div>
 
-        {/* Séparation */}
-        <div className="separator"></div>
-
-        {/* Partie Joueur */}
-        <article className="text-center">
-          <div className="portrait">
-            <img src="https://source.unsplash.com/100x100/?avatar2" alt="Joueur" />
-          </div>
-          <h3 className="text-white">Joueur</h3>
-        </article>
-        <article className="row justify-content-center">
-          {champions.slice(1).map((champion, index) => (
-            <div key={index} className="col-md-4">
-              <div className="carte">
-                <img src={champion.img} alt={champion.name} />
-                <div className="nom-champion">{champion.name}</div>
-              </div>
+        {/* Adversaire 2 */}
+        <div className="col-5">
+          <div className="opponent-zone bg-dark p-3 rounded-3 h-100">
+            <h4 className="text-white mb-3">Adversaire 2</h4>
+            <div className="d-flex gap-2 flex-wrap">
+              {Array(5).fill().map((_, index) => (
+                <div key={index} className="card-slot" style={{
+                  width: "100px",
+                  height: "140px",
+                  border: "2px dashed #666",
+                  borderRadius: "8px",
+                  background: "rgba(255,255,255,0.1)"
+                }}>
+                  {cartesAdversaire2?.[index] && (
+                    <img 
+                      src={cartesAdversaire2[index].img} 
+                      alt={cartesAdversaire2[index].name}
+                      className="w-100 h-100"
+                      style={{ borderRadius: "6px", objectFit: "cover" }}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
-        </article>
+          </div>
+        </div>
+      </div>
 
-      </section>
+      {/* Zone centrale (pour éventuels éléments de jeu) */}
+      <div className="row mb-5" style={{ height: "20%", background: "rgba(0,0,0,0.3)", borderRadius: "10px" }}></div>
+
+      {/* Zone du joueur */}
+      <div className="row" style={{ height: "35%" }}>
+        <div className="col-12">
+          <Main 
+            cards={main} 
+            placer={deplacerCarte}
+            style={{ height: "100%" }}
+          />
+        </div>
+      </div>
     </div>
   );
 };

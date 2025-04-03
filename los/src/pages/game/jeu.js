@@ -9,6 +9,7 @@ export default function Jeu(){
     const [hp, setHp] = useState(null);
     const [hand, setHand] = useState([]);
     const [board, setBoard] = useState([]);
+    const [board2, setBoard2] = useState([]);
     const [cardPicked, setCardPicked] = useState(false);
     const [turn, setTurn] = useState(false);
 
@@ -35,11 +36,12 @@ export default function Jeu(){
         })
         .then(rep =>{
             console.log("Infos du match : ",rep);
-            setHp(rep.hp);
-            setHand(rep.hand);
-            setBoard(rep.board);
-            setCardPicked(rep.cardPicked);
-            setTurn(rep.turn);
+            setHp(rep.player1.hp);
+            setHand(rep.player1.hand);// cartes dans sa main
+            setBoard(rep.player1.board);// cartes dejà jouées sur le plateau
+            setCardPicked(rep.player1.cardPicked);// Booléen pour savoir si une carte a été piochée ou pas
+            setTurn(rep.player1.turn);// Booléen pour savoir si c'est son tour ou pas
+            setBoard2(rep.player2.board);// cartes dejà jouées sur le plateau adversaire
         })
         .catch(err => console.error("Erreur : ",err))
     };
@@ -152,7 +154,12 @@ export default function Jeu(){
     }
     return(
         <>
-            <Plateau />
+            <Plateau 
+                main={hand}
+                deplacerCarte={playCard}
+                cartesAdversaire1={board}
+                cartesAdversaire2={board2}
+            />
         </>
     )
 }

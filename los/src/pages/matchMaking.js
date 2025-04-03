@@ -24,7 +24,7 @@ const MatchMaking = () => {
   }, [router]); // Dépendance sur router pour éviter les avertissements
 
   const joinQueue = async () => router.push("/liste-attente")
-  const battle = async () => router.push("/game/prototype");
+  const battle = async () => router.push("/game/jeu.js");
 
   const retourAccueil = () => {
     sessionStorage.removeItem("deck");
