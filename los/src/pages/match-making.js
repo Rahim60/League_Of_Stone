@@ -24,7 +24,7 @@ const MatchMaking = () => {
             // Recuperer data?.match
             data?.request && setRequests(data?.request);
         }).catch(({ message }) => setError(message))
-    , [])
+    , []);
 
     // Function to fetch players dans la liste d'attente
     const fetchPlayers = useCallback(() =>
@@ -57,7 +57,7 @@ const MatchMaking = () => {
         }).catch(({ message }) => {
             console.log(message)
             setError("Erreur lors de la acceptation de l'invitation. Relance ")
-        })
+        });
 
     useEffect(() => {
         intervalRef.current = setInterval(() => {

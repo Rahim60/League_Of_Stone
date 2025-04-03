@@ -6,16 +6,18 @@ const Navbar = () => {
 
     const [username, setUsername] = useState("");
     const [error, setError] = useState("");
+
+    const router = useRouter();
+
     useEffect(() => {
         const storedName = sessionStorage.getItem("name");
         storedName && setUsername(storedName);
     }, [])
 
-    const router = useRouter();
     
     const handleLogout = () => {
         axios.post('/logout').catch(({ message }) => setError(message));
-        sessionStorage.clear();
+        !error && sessionStorage.clear();
 
         router.push("/"); // Redirection avec router
     };
