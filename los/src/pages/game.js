@@ -1,4 +1,5 @@
 import Deck from "@/components/Deck";
+import DummyDeck from "@/components/DummyDeck";
 import Navbar from "@/components/Navbar";
 import Plateau from "@/components/Plateau";
 import axios from "axios";
@@ -10,18 +11,18 @@ const Game = () => {
     const dummy1 = [{ "_id": "67b4b3c947afde42bc37d428", "id": 24, "key": "Jax", "name": "Jax", "title": "Maître d'armes", "image": { "full": "Jax.png", "sprite": "champion1.png", "group": "champion", "x": 144, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 5, "magic": 7, "difficulty": 5 } }]
     
     const [match, setMatch] = useState([]);
-    const [deck, setDeck] = useState([]);
-    const [deckOpp, setDeckOpp] = useState([]);
+    const [deckJoueur, setDeckJoueur] = useState([]);
+    const [deckAdv, setDeckAdv] = useState([]);
 
     const [error, setError] = useState("");
     
 
     
-    useEffect(() => setDeck(dummy), []); 
+    useEffect(() => setDeckJoueur(dummy), []); 
 
     useEffect(() => {
         const storedDeck = sessionStorage.getItem("deck");
-        if (storedDeck) setDeck(storedDeck);
+        if (storedDeck) setDeckJoueur(storedDeck);
     }, []);
 
     useEffect(() => getMatch(), [])
@@ -33,7 +34,7 @@ const Game = () => {
         }), []);
     
     const initDeck = () => 
-        axios.get(`/match/initDeck?deck=${JSON.stringify(deck.map(({ key }) => ({ key })))}`).catch(({ message }) => {
+        axios.get(`/match/initDeck?deck=${JSON.stringify(deckJoueur.map(({ key }) => ({ key })))}`).catch(({ message }) => {
             console.log(message);
             setError("Erreur lors de la recuperation du jeu")
         });
@@ -73,20 +74,24 @@ const Game = () => {
             <Navbar title={"Match"} />
 
             <div className="container">
+                {error && <p className="alert alert-danger mt-3">{error}</p>}
+
                 <div className="row align-items-center justify-content-center my-3">
                     {/* Left Side (Deck) */}
                     <h4 className="alert bg-dark text-white text-center" >Michael</h4>
 
                     <div className="col-md-3 d-flex flex-column">
-                        <h6 className="lead text-center">Deck Adversaire</h6>
-                        <Deck deck={dummy} handleAjoutADeck={() => {}} type={"game"} />
+                        <h6 className="lead justify-content-center">Deck Adversaire</h6>
+                        <DummyDeck deck={dummy} />
+                        {/* <Deck deck={dummy} handleAjoutADeck={() => {}} type={"game"} /> */}
+
                     </div>
                     
                     <Plateau />
 
                     {/* Right Side (Deck) */}
                     <div className="col-md-3 d-flex flex-column">
-                        <Deck deck={dummy} handleAjoutADeck={() => { }} type={"game"} />
+                        <Deck deck={dummy} handleAjoutADeck={() => {}} type={"game"} />
                         <h6 className="lead text-center">Votre Deck</h6>
                     </div>
                     <h4 className="alert bg-dark text-white text-center" >Vous</h4>

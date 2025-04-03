@@ -5,7 +5,9 @@ const DummyDeck = ({ deck }) => {
 
     return (
         <>
-            {deck.map((card, index) => <DummyCard key={index} />)}
+            <div className="container row">
+                {deck.map( (index) => <DummyCard key={index} />)}
+            </div>
         </>
     )
 };
