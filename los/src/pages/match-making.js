@@ -10,6 +10,7 @@ const MatchMaking = () => {
     const [matchInfo, setMatchInfo] = useState({
         matchmakingId: "",
         request: [],
+        match : {}
     });
 
     const [success, setSucess] = useState("");
@@ -21,20 +22,21 @@ const MatchMaking = () => {
     // Function to join matchmaking
     const joinMatchmaking = useCallback(() => {
         axios.get(`/matchmaking/participate`).then(({ data }) => {
-            console.log(data)
             setMatchInfo(prevData => ({
                 ...prevData,
-                matchmakingId: data?.matchmakingId,
-                request: data?.request,
+                matchmakingId : data?.matchmakingId,
+                request : data?.request,
+                match : data?.match
             }))
             fetchPlayers();
         }).catch(({ message }) => setError(message))
 
-        axios.get('/match/getMatch').then(({ data }) => (data?.player1 && data?.player2) && router.push("/game"))
-            .catch(({ message }) => setError(message))
-
-        // matchInfo?.match && router.push("/game");
     }, []);
+
+    const startGame = () => {
+        matchInfo?.match?.player1 && sessionStorage.setItem("nomAdv", matchInfo?.match?.player1?.name);
+        router.push("/game")
+    }
 
     // Function to fetch players dans la liste d'attente
     const fetchPlayers = useCallback(() =>
@@ -62,12 +64,11 @@ const MatchMaking = () => {
         axios.get(`/matchmaking/acceptRequest?matchmakingId=${matchmakingId}`).then(({ data }) => {
             setSucess("Match calé !")
             sessionStorage.setItem("activeMatch", JSON.stringify(data))
+            router.push("/game")
         }).catch(({ message }) => {
             console.log(message)
             setError("Erreur lors de la acceptation de l'invitation. Relance ")
-        })
-        
-        if (!error) router.push("/game")
+        }) 
     }
 
     useEffect(() => {
@@ -126,7 +127,6 @@ const MatchMaking = () => {
                                                     Requête Envoyée
                                                 </button>
                                             }
-
                                         </td>
                                     </tr>
                                 ) : null
@@ -153,6 +153,19 @@ const MatchMaking = () => {
                                 </td>
                             </tr>
                         ))}
+
+                        {/* ✅ Affichage si un match a été trouvé */}
+                        {matchInfo?.match?.player1 && (
+                            <tr key={matchInfo.match.player1?.matchmakingId}>
+                                <td>{matchInfo.match.player1?.name}</td>
+                                <td></td>
+                                <td>
+                                    <button className="btn btn-success" onClick={() => { startGame() }}>
+                                        Commencer la partie
+                                    </button>
+                                </td>
+                            </tr>
+                        )}
 
                     </tbody>
                 </table>
