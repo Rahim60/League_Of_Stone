@@ -40,7 +40,7 @@ const ConfirmationDeck = () => {
           )}
         </div>
 
-        {/* Buttons Section */}
+        {/* Buttons de redirection */}
         <div className="row justify-content-center mt-4">
           <div className="col-md-6 d-flex justify-content-center gap-3">
             <button className="btn btn-outline-primary btn-lg" onClick={retourAccueil}>

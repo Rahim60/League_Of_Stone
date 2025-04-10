@@ -12,7 +12,6 @@ const Game = () => {
     });
     const [error, setError] = useState("");
 
-    // --- Moved up so it's defined before useEffect uses it ---
     const getMatch = useCallback(async () => {
         try {
             const username = sessionStorage.getItem("name");
@@ -33,7 +32,7 @@ const Game = () => {
     }, [setMatch, setError]);
 
 
-    // Setup interval to fetch match data
+    // Interval pour interroger getMatch frequemment
     useEffect(() => {
         const interval = setInterval(() => {
             getMatch();
@@ -42,7 +41,7 @@ const Game = () => {
         return () => clearInterval(interval);
     }, [getMatch]);
 
-    // Initial setup: get deck + opponent name
+    //  setup: get deck + nom adversaire
     useEffect(() => {
         const storedDeck = sessionStorage.getItem("deck");
 
@@ -139,7 +138,7 @@ const Game = () => {
         }
     }
 
-    // Log the state variables whenever they change
+    // Console log retour de getMatch
     useEffect(() => {
         console.log("Match State:", match);
         console.log("Error State:", error);
@@ -162,10 +161,10 @@ const Game = () => {
 
                 <div className="row align-items-center justify-content-center my-3">
 
-                    {/* Only show opponent deck if adversaire is defined */}
+                    {/* Affichage de l'adversaire */}
                     {match?.adversaire && (
                         <>
-                            {/* Only show opponent name when it's available */}
+                            {/* Affichage nom adversaire  */}
                             <h4 className="alert bg-dark text-white text-center">{match?.adversaire?.name}</h4>
 
                             <div className="col-md-3 d-flex flex-column justify-content-center align-items-center">
@@ -177,7 +176,7 @@ const Game = () => {
                         </>
                     )}
 
-                    {/* Only pass match data if it's available */}
+                    {/* Affichage du plateau */}
                     {match && match.joueur && match.adversaire && (
                         <Plateau
                             joueur={match.joueur}
@@ -190,7 +189,7 @@ const Game = () => {
                         />
                     )}
 
-                    {/* Only show the player deck */}
+                    {/* Affichage du Deck du joueur */}
                     {match.joueur?.deck && (
                         <div className="col-md-3 d-flex flex-column justify-content-center align-items-center">
                             {match.joueur?.deck && <p className="lead text-center">Cartes Restant : {match.joueur?.deck}/20</p>}
@@ -200,7 +199,7 @@ const Game = () => {
                                 <button
                                     className="btn btn-outline-secondary"
                                     onClick={piocheCarte}
-                                    disabled={match?.joueur?.cardPicked} // Disable if card is already picked
+                                    disabled={match?.joueur?.cardPicked}
                                 >
                                     Piocher une carte
                                 </button>
@@ -208,7 +207,7 @@ const Game = () => {
                         </div>
                     )}
 
-                    {/* Only show "You" section when match data is available */}
+                    {/* affichae Vous */}
                     {match && match.joueur && (
                         <h4 className="alert bg-dark text-white text-center mt-4">Vous</h4>
                     )}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Deck from "./Deck";
 import UnknownDeck from "./UnknownDeck";
 import Image from "next/image";
 import lifeBar from "../public/health-bar.png";
@@ -25,9 +24,9 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
 
     return (
         <>
-            {/* Game Board + Player Deck */}
+            {/* Plateau + Deck Joueur */}
             <div className="col-md-6">
-                {/* Opponent's Hand */}
+                {/* Main de l'opposant */}
                 {adversaire?.name && (
                     <div className="d-flex flex-row justify-content-around align-items-start">
                         <div className="d-flex align-items-center flex-column mb-3">
@@ -50,7 +49,7 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                 {/* Plateau (Game Board) */}
                 <div className="bg-light-subtle border border-secondary rounded px-3 text-center">
                     <div className="container d-flex justify-content-center">
-                        {/* Render Opponent's Board if available */}
+                        {/* Cartees de l'adversaire dur le plateau */}
                         {adversaire?.board?.length > 0 && (
                             <DeckGame deck={adversaire.board}
                                 handleAttackAux={(card) => {
@@ -73,7 +72,7 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                     )}
                 </div>
 
-                {/* Player's Hand */}
+                {/* Main Joueur */}
                 {joueur?.hand?.length > 0 && (
                     <div className="d-flex flex-column justify-content-center mt-3">
                         <DeckGame deck={joueur.hand}
@@ -82,7 +81,7 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                                 playCard(card?.key)
                             }} />
                         <div className="d-flex flex-row justify-content-around">
-                            {/* Player's Health */}
+                            {/* Points de Vie Joueur */}
                             {joueur?.hp && (
                                 <div className="col-md-3 d-flex flex-column align-items-center justify-content-center">
                                     <h6 className="lead text-center">Points de Vie</h6>
@@ -93,12 +92,12 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                                 </div>
                             )}
 
-                            {/* Player's Turn Actions */}
+                            {/* Passer le tour a l'adversaire */}
                             <div className="col-md-3 d-flex flex-row align-items-center justify-content-center">
                                 <button
                                     className="btn btn-outline-dark me-2"
                                     onClick={() => selCard && attackPlayer(selCard)}
-                                    disabled={adversaire?.hand?.length <= 0} // Disable if no cards are available to play
+                                    disabled={adversaire?.hand?.length <= 0} 
                                 >
                                     Attacquer {adversaire?.name}
                                 </button>
@@ -106,8 +105,8 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                                 {adversaire && (
                                     <button
                                         className="btn btn-outline-info"
-                                        onClick={() => endTurn()} // Example: attacking first enemy card
-                                        disabled={joueur?.turn == false} // Disable if no cards are available to attack
+                                        onClick={() => endTurn()} 
+                                        disabled={joueur?.turn == false} 
                                     >
                                         Fin Tour
                                     </button>

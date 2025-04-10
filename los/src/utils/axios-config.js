@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// Configurations axios pour tous les appels au serveur 
 axios.defaults.baseURL = "http://localhost:3001";
 
 axios.interceptors.request.use(

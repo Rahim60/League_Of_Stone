@@ -48,28 +48,27 @@ const MatchMaking = () => {
 
     useEffect(() => {
 
-        joinMatchmaking(); // Your original matchmaking call
+        joinMatchmaking(); 
 
-        const intervalId = setInterval(joinMatchmaking, 3000); // Every 3s
+        const intervalId = setInterval(joinMatchmaking, 3000); 
 
-        return () => clearInterval(intervalId); // Cleanup on unmount
+        return () => clearInterval(intervalId);
     }, [joinMatchmaking, navigate]);
 
 
     const initDeck = async () => {
         try {
-            // Make the API call to initialize the deck
+            // initialiser le deck
             await axios.get(`/match/initDeck?deck=${JSON.stringify(deck.map(({ key }) => ({ key })))}`);
         } catch (err) {
-            // Handle errors here
             console.log(err.message || err);
             setError("Erreur lors de la récupération du jeu");
         }
     };
 
 
-    // Function to send request and check for match
-    const sendRequest = async (matchmakingId, playerName) => {
+    // Renvoyer des requests au jouer precis 
+    const sendRequest = async (matchmakingId) => {
         try {
             const { data } = await axios.get(`/matchmaking/request`, {
                 params: { matchmakingId },
@@ -88,7 +87,7 @@ const MatchMaking = () => {
         }
     };
 
-    // Function to accept request and check for match
+    // Accepter requete et verifier match
     const acceptRequest = async (matchmakingId, playerName) => {
         try {
             const { data } = await axios.get(`/matchmaking/acceptRequest`, {
@@ -103,7 +102,7 @@ const MatchMaking = () => {
             if (participateData.data?.match?.player1?.name === playerName) {
                 initDeck()
                     .then(() => navigate.push("/game"))
-                    .catch(setError);// Redirect if match is made or player names match
+                    .catch(setError);
             }
 
         } catch (error) {
@@ -140,7 +139,7 @@ const MatchMaking = () => {
                                     ) : (
                                         <button
                                             className="btn btn-outline-secondary me-2"
-                                            onClick={() => sendRequest(player.matchmakingId, player.name)}
+                                            onClick={() => sendRequest(player.matchmakingId)}
                                         >
                                             Inviter à jouer
                                         </button>
