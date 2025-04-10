@@ -16,10 +16,13 @@ const Navbar = () => {
 
     
     const handleLogout = () => {
-        axios.post('/logout').catch(({ message }) => setError(message));
-        !error && sessionStorage.clear();
+        axios.post('/logout')
+            .then(() => {
+                sessionStorage.clear();
+                router.push("/"); // Redirection avec router
 
-        router.push("/"); // Redirection avec router
+            })
+            .catch(({ message }) => setError(message));
     };
 
     return (
@@ -30,7 +33,7 @@ const Navbar = () => {
                 {username && (
                     <div className="d-flex align-items-center">
                         <span className="fw-bold me-2 col-4">{username} </span>
-                        <button className="btn btn-danger me-2" onClick={handleLogout}>
+                        <button className="btn btn-danger me-2*" onClick={handleLogout}>
                             Déconnexion
                         </button>
                     </div>

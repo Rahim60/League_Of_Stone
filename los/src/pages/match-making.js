@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 const MatchMaking = () => {
     const [availablePlayers, setAvailablePlayers] = useState([]);
+    const [request, setRequest] = useState([]);
     const [userId, setUserId] = useState("");
     const [error, setError] = useState("");
 
@@ -25,25 +26,35 @@ const MatchMaking = () => {
     const joinMatchmaking = useCallback(async () => {
         try {
             const { data } = await axios.get("/matchmaking/participate");
+            const players = data?.request;
+            setRequest(players);
 
             await fetchPlayers();
 
-            // Check if a match has been made in participate
-            if (data?.match) {
-                navigate.push("/game"); // Redirect if a match is made
+            const participateData = await axios.get("/matchmaking/participate");
+
+            const username = localStorage.getItem("name");
+
+            if (participateData.data?.match) {
+                console.log("particiapte")
+                initDeck();
+                navigate.push("/game"); // Redirect to game
             }
+
         } catch (err) {
             setError(err.message);
         }
     }, [navigate]);
 
     useEffect(() => {
-        const userIdFromStorage = localStorage.getItem("userId");
-        setUserId(userIdFromStorage);
-        joinMatchmaking(); // Initial call
-        const intervalId = setInterval(joinMatchmaking, 2000); // Check every 2 seconds
-        return () => clearInterval(intervalId);
-    }, [joinMatchmaking]);
+
+        joinMatchmaking(); // Your original matchmaking call
+
+        const intervalId = setInterval(joinMatchmaking, 3000); // Every 3s
+
+        return () => clearInterval(intervalId); // Cleanup on unmount
+    }, [joinMatchmaking, navigate]);
+
 
     const initDeck = async () => {
         try {
@@ -51,7 +62,7 @@ const MatchMaking = () => {
             await axios.get(`/match/initDeck?deck=${JSON.stringify(deck.map(({ key }) => ({ key })))}`);
         } catch (err) {
             // Handle errors here
-            console.error(err.message || err);
+            console.log(err.message || err);
             setError("Erreur lors de la récupération du jeu");
         }
     };
@@ -72,13 +83,6 @@ const MatchMaking = () => {
                 )
             );
 
-            // Check if match has been made after sending the request
-            const participateData = await axios.get("/matchmaking/participate");
-
-            if (participateData.data?.match?.name === playerName) {
-                initDeck();
-                navigate.push("/game"); // Redirect if match is made or player names match
-            }
         } catch (error) {
             console.log("Erreur lors de l'envoi de la requête :", error);
         }
@@ -94,14 +98,14 @@ const MatchMaking = () => {
             setAvailablePlayers((prev) =>
                 prev.filter((player) => player.matchmakingId !== matchmakingId)
             );
-
-            // Check if match has been made after accepting the request
             const participateData = await axios.get("/matchmaking/participate");
 
-            if ( participateData.data?.player1?.name === playerName) {
-                initDeck();
-                navigate.push("/game"); // Redirect if match is made or player names match
+            if (participateData.data?.match?.player1?.name === playerName) {
+                initDeck()
+                    .then(() => navigate.push("/game"))
+                    .catch(setError);// Redirect if match is made or player names match
             }
+
         } catch (error) {
             console.log("Erreur lors de l'acceptation de la requête :", error);
         }
@@ -134,21 +138,28 @@ const MatchMaking = () => {
                                             Requête Envoyée
                                         </button>
                                     ) : (
-                                        <>
-                                            <button
-                                                className="btn btn-outline-primary me-2"
-                                                onClick={() => sendRequest(player.matchmakingId, player.name)}
-                                            >
-                                                Inviter à jouer
-                                            </button>
-                                            <button
-                                                className="btn btn-outline-success"
-                                                onClick={() => acceptRequest(player.matchmakingId, player.name)}
-                                            >
-                                                Accepter
-                                            </button>
-                                        </>
+                                        <button
+                                            className="btn btn-outline-secondary me-2"
+                                            onClick={() => sendRequest(player.matchmakingId, player.name)}
+                                        >
+                                            Inviter à jouer
+                                        </button>
                                     )}
+                                </td>
+                            </tr>
+                        ))}
+
+                        {request.map((player) => (
+                            <tr key={player.matchmakingId}>
+                                <td>{player.name}</td>
+                                <td></td>
+                                <td>
+                                    <button
+                                        className="btn btn-outline-dark"
+                                        onClick={() => acceptRequest(player.matchmakingId, player.name)}
+                                    >
+                                        Accepter
+                                    </button>
                                 </td>
                             </tr>
                         ))}

@@ -15,17 +15,23 @@ const Game = () => {
     // --- Moved up so it's defined before useEffect uses it ---
     const getMatch = useCallback(async () => {
         try {
+            const username = sessionStorage.getItem("name");
+            if (!username) throw new Error("Nom d'utilisateur manquant");
+
             const { data } = await axios.get('/match/getMatch');
+
             setMatch({
                 status: data?.status,
-                joueur: data?.player1,
-                adversaire: data?.player2,
+                joueur: data?.player1?.name === username ? data?.player1 : data?.player2,
+                adversaire: data?.player1?.name === username ? data?.player2 : data?.player1,
             });
+
         } catch (error) {
-            console.log(error.message);
+            console.error("Erreur lors de la récupération du match:", error.message);
             setError("Erreur lors de la récupération du jeu");
         }
-    }, []);
+    }, [setMatch, setError]);
+
 
     // Setup interval to fetch match data
     useEffect(() => {
@@ -43,15 +49,25 @@ const Game = () => {
         if (storedDeck) {
             try {
                 const parsedDeck = JSON.parse(storedDeck);
-                setDeckJoueur(parsedDeck);
-                initDeck(parsedDeck);
+                if (parsedDeck) {
+                    if (match?.status == "Deck is pending") 
+                        initDeck(parsedDeck);
+                }
             } catch (e) {
                 console.log("Erreur parsing deck", e);
             }
         }
 
-        getMatch();
-    }, []);
+        getMatch().then(() => {
+            if (
+                match?.adversaire?.hp <= 0
+                || match?.joueur?.hp <= 0
+                || match?.joueur.turn == false && match?.adversaire.turn == false
+            )
+                endMatch();
+        }
+)
+    }, [match?.status]);
 
     const initDeck = async (deck) => {
         try {
@@ -113,6 +129,16 @@ const Game = () => {
         }
     };
 
+    const endMatch = async () => {
+        try {
+            if (joueur?.hp <= 0 && adversaire?.hp) {
+                await axios.get(`/match/finishMatch`);
+            }
+        } catch (error) {
+            setError(error || error?.message);
+        }
+    }
+
     // Log the state variables whenever they change
     useEffect(() => {
         console.log("Match State:", match);
@@ -125,6 +151,14 @@ const Game = () => {
 
             <div className="container">
                 {error && <p className="alert alert-danger mt-3">{error}</p>}
+
+                {(
+                    match?.adversaire?.hp <= 0
+                    || match?.joueur?.hp <= 0
+                    || match?.joueur.turn == false && match?.adversaire.turn == false
+                )
+                    && <p className="alert alert-success mt-3">{match?.status}</p>
+                }
 
                 <div className="row align-items-center justify-content-center my-3">
 

@@ -27,10 +27,12 @@ export default function Home() {
     }).then(({ data }) => {
       sessionStorage.setItem("token", data?.token);
       sessionStorage.setItem("name", data?.name);
+      sessionStorage.setItem("userId", data?.id);
+
+      //redirection vers la page pour choisir son deck 
+      router.push("/accueil");
     }).catch(({ message }) => setError(message))
 
-    //redirection vers la page pour choisir son deck 
-    !error && router.push("/accueil");
   };
 
   return (
@@ -44,7 +46,7 @@ export default function Home() {
 
       <NavbarDeb action={"Creer un Compte"} />
 
-      <div className="d-flex justify-content-center align-items-center vh-100 ">
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100 ">
 
         {/* Formulaire */}
         {error && <p className="alert alert-danger">{error}</p>}

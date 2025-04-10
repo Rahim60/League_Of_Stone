@@ -7,6 +7,21 @@ import DeckGame from "./DeckGame";
 
 const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTurn }) => {
 
+    const [selCard, setSelCard] = useState(null);
+    const [enemyCard, setEnemyCard] = useState(null);
+
+    const handleAttackCard = async () => {
+        if (selCard && enemyCard) {
+            attackCard(selCard, enemyCard);
+
+            setEnemyCard(null);
+            setSelCard(null);
+        }
+    }
+
+    useEffect(() => {
+        handleAttackCard()
+    }, [selCard, enemyCard])
 
     return (
         <>
@@ -37,21 +52,35 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                     <div className="container d-flex justify-content-center">
                         {/* Render Opponent's Board if available */}
                         {adversaire?.board?.length > 0 && (
-                            <DeckGame deck={adversaire.board} handler={() => { }} />
+                            <DeckGame deck={adversaire.board}
+                                handleAttackAux={(card) => {
+                                    console.log(card)
+                                    setEnemyCard(card.key)
+                                }}
+                            />
                         )}
                     </div>
                     {/* Separator */}
                     <hr className="my-4 border-secondary" />
                     {/* Render Player's Board if available */}
                     {joueur?.board?.length > 0 && (
-                        <DeckGame deck={joueur.board} handler={() => attackCard()} />
+                        <DeckGame deck={joueur.board}
+                            handleAttackAux={(card) => {
+                                console.log()
+                                setSelCard(card?.key)
+                            }}
+                        />
                     )}
                 </div>
 
                 {/* Player's Hand */}
                 {joueur?.hand?.length > 0 && (
                     <div className="d-flex flex-column justify-content-center mt-3">
-                        <DeckGame deck={joueur.hand} handler={() => playCard()} />
+                        <DeckGame deck={joueur.hand}
+                            playCard={(card) => {
+                                console.log(card)
+                                playCard(card?.key)
+                            }} />
                         <div className="d-flex flex-row justify-content-around">
                             {/* Player's Health */}
                             {joueur?.hp && (
@@ -68,7 +97,7 @@ const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTu
                             <div className="col-md-3 d-flex flex-row align-items-center justify-content-center">
                                 <button
                                     className="btn btn-outline-dark me-2"
-                                    onClick={attackPlayer}
+                                    onClick={() => selCard && attackPlayer(selCard)}
                                     disabled={adversaire?.hand?.length <= 0} // Disable if no cards are available to play
                                 >
                                     Attacquer {adversaire?.name}
