@@ -1,5 +1,2 @@
-jsconfig.json
-next.config.mjs
-package-lock.json
-package.json
-eslint.config.mjs
+
+client/

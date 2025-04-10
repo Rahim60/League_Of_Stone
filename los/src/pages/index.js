@@ -1,8 +1,40 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
+import NavbarDeb from "@/components/NavbarDeb";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import axios from "axios";
+
 
 
 export default function Home() {
+
+  const router = useRouter();
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value })
+
+  const loginuser = (e) => {
+    e.preventDefault();
+
+    axios.post(`/login`, {
+      email: formData.email,
+      password: formData.password
+    }).then(({ data }) => {
+      sessionStorage.setItem("token", data?.token);
+      sessionStorage.setItem("name", data?.name);
+      sessionStorage.setItem("userId", data?.id);
+
+      //redirection vers la page pour choisir son deck 
+      router.push("/accueil");
+    }).catch(({ message }) => setError(message))
+
+  };
+
   return (
     <>
       <Head>
@@ -11,6 +43,46 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <NavbarDeb action={"Creer un Compte"} />
+
+      <div className="d-flex flex-column justify-content-center align-items-center vh-100 ">
+
+        {/* Formulaire */}
+        {error && <p className="alert alert-danger">{error}</p>}
+        <form onSubmit={loginuser} className="border p-3 rounded" style={{ width : "40%" }}>
+
+          <div className="text-center mb-3 ">
+            <h2 className="rounded">
+              CONNEXION
+            </h2>
+          </div>
+
+          {/* Champ Email */}
+          <div className="mb-3">
+            <label className="form-label fs-5">Email :</label>
+            <input
+              type="email" name="email" value={formData.email}
+              onChange={handleChange} required className="form-control rounded border" />
+          </div>
+
+          {/* Champ Mot de Passe */}
+          <div className="mb-3">
+            <label className="form-label fs-5">Mot de passe :</label>
+            <input
+              type="password" name="password" value={formData.password}
+              onChange={handleChange} required className="form-control rounded border" />
+          </div>
+
+          {/* Bouton de Soumission */}
+          <div className="text-center">
+            <button type="submit" className="btn btn-success">
+              Se Connecter
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
+
 }
