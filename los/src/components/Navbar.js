@@ -29,8 +29,8 @@ const Navbar = () => {
 
                 {username && (
                     <div className="d-flex align-items-center">
-                        <span className="fw-bold mr-3 col-4">{username} </span>
-                        <button className="btn btn-danger" onClick={handleLogout}>
+                        <span className="fw-bold me-2 col-4">{username} </span>
+                        <button className="btn btn-danger me-2" onClick={handleLogout}>
                             Déconnexion
                         </button>
                     </div>

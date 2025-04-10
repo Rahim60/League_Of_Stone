@@ -1,47 +1,95 @@
 import { useEffect, useState } from "react";
 import Deck from "./Deck";
-
 import UnknownDeck from "./UnknownDeck";
+import Image from "next/image";
+import lifeBar from "../public/health-bar.png";
+import DeckGame from "./DeckGame";
 
-const Plateau = () => {
+const Plateau = ({ joueur, adversaire, playCard, attackCard, attackPlayer, endTurn }) => {
 
-
-    const dummy = [{ "_id": "67b4b3c947afde42bc37d428", "id": 24, "key": "Jax", "name": "Jax", "title": "Maître d'armes", "image": { "full": "Jax.png", "sprite": "champion1.png", "group": "champion", "x": 144, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 5, "magic": 7, "difficulty": 5 } }, { "_id": "67b4b3c947afde42bc37d429", "id": 37, "key": "Sona", "name": "Sona", "title": "Virtuose de la harpe", "image": { "full": "Sona.png", "sprite": "champion3.png", "group": "champion", "x": 432, "y": 0, "w": 48, "h": 48 }, "info": { "attack": 5, "defense": 2, "magic": 8, "difficulty": 4 } }, { "_id": "67b4b3c947afde42bc37d42a", "id": 18, "key": "Tristana", "name": "Tristana", "title": "Canonnière yordle", "image": { "full": "Tristana.png", "sprite": "champion3.png", "group": "champion", "x": 432, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 9, "defense": 3, "magic": 5, "difficulty": 4 } }, { "_id": "67b4b3c947afde42bc37d42b", "id": 110, "key": "Varus", "name": "Varus", "title": "Flèche de la vengeance", "image": { "full": "Varus.png", "sprite": "champion3.png", "group": "champion", "x": 288, "y": 96, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 3, "magic": 4, "difficulty": 2 } }]
-    const dummy2 = [{ "_id": "67b4b3c947afde42bc37d428", "id": 24, "key": "Jax", "name": "Jax", "title": "Maître d'armes", "image": { "full": "Jax.png", "sprite": "champion1.png", "group": "champion", "x": 144, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 5, "magic": 7, "difficulty": 5 } }, { "_id": "67b4b3c947afde42bc37d429", "id": 37, "key": "Sona", "name": "Sona", "title": "Virtuose de la harpe", "image": { "full": "Sona.png", "sprite": "champion3.png", "group": "champion", "x": 432, "y": 0, "w": 48, "h": 48 }, "info": { "attack": 5, "defense": 2, "magic": 8, "difficulty": 4 } }]
-
-    const [mainAdv, setMainAdv] = useState([]);
-    const [carteJouee, setCarteJouee] = useState([]);
 
     return (
         <>
-
             {/* Game Board + Player Deck */}
             <div className="col-md-6">
-                {/* Opponent's Deck */}
-                <div className="d-flex align-items-center flex-column mb-3">
-                    <h6 className="lead text-center">Main Adversaire</h6>
-                    <UnknownDeck />
-                </div>
+                {/* Opponent's Hand */}
+                {adversaire?.name && (
+                    <div className="d-flex flex-row justify-content-around align-items-start">
+                        <div className="d-flex align-items-center flex-column mb-3">
+                            <h6 className="lead text-center">Main de {adversaire?.name || "l'adversaire"}</h6>
+                            <UnknownDeck />
+                        </div>
 
+                        {adversaire?.hp && (
+                            <div className="col-md-3 d-flex flex-column align-items-center justify-content-center">
+                                <h6 className="lead text-center">Points de Vie</h6>
+                                <div className="d-flex flex-row align-items-center justify-content-center">
+                                    <Image src={lifeBar} width={40} height={40} alt="life bar" />
+                                    <p className="lead text-center ms-2 mb-0">{adversaire.hp} points</p>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
 
                 {/* Plateau (Game Board) */}
-                <div className="bg-light-subtle border border-secondary rounded shadow text-center">
+                <div className="bg-light-subtle border border-secondary rounded px-3 text-center">
                     <div className="container d-flex justify-content-center">
-                        <Deck deck={dummy2} handleAjoutADeck={() => { }} type={"game"} />
+                        {/* Render Opponent's Board if available */}
+                        {adversaire?.board?.length > 0 && (
+                            <DeckGame deck={adversaire.board} handler={() => { }} />
+                        )}
                     </div>
-                    {/* seperator*/}
+                    {/* Separator */}
                     <hr className="my-4 border-secondary" />
-
-                    <Deck deck={dummy2} handleAjoutADeck={() => { }} type={"game"} />
+                    {/* Render Player's Board if available */}
+                    {joueur?.board?.length > 0 && (
+                        <DeckGame deck={joueur.board} handler={() => attackCard()} />
+                    )}
                 </div>
 
-                {/* Player's Deck */}
-                <div className="d-flex flex-column justify-content-center mt-3">
-                    <Deck deck={dummy} handleAjoutADeck={() => { }} type={"game"} />
-                    <h6 className="lead text-center">Votre Main</h6>
-                </div>
+                {/* Player's Hand */}
+                {joueur?.hand?.length > 0 && (
+                    <div className="d-flex flex-column justify-content-center mt-3">
+                        <DeckGame deck={joueur.hand} handler={() => playCard()} />
+                        <div className="d-flex flex-row justify-content-around">
+                            {/* Player's Health */}
+                            {joueur?.hp && (
+                                <div className="col-md-3 d-flex flex-column align-items-center justify-content-center">
+                                    <h6 className="lead text-center">Points de Vie</h6>
+                                    <div className="d-flex flex-row align-items-center justify-content-center">
+                                        <Image src={lifeBar} width={40} height={40} alt="life bar" />
+                                        <p className="lead text-center ms-2 mb-0">{joueur.hp} points</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Player's Turn Actions */}
+                            <div className="col-md-3 d-flex flex-row align-items-center justify-content-center">
+                                <button
+                                    className="btn btn-outline-dark me-2"
+                                    onClick={attackPlayer}
+                                    disabled={adversaire?.hand?.length <= 0} // Disable if no cards are available to play
+                                >
+                                    Attacquer {adversaire?.name}
+                                </button>
+
+                                {adversaire && (
+                                    <button
+                                        className="btn btn-outline-info"
+                                        onClick={() => endTurn()} // Example: attacking first enemy card
+                                        disabled={joueur?.turn == false} // Disable if no cards are available to attack
+                                    >
+                                        Fin Tour
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </>
+
     );
 };
 

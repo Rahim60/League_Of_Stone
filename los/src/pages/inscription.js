@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavbarDeb from "@/components/NavbarDeb";
-import { useFetch } from "@/utils/axios-config";
 import axios from "axios";
 
 export default function Inscription() {
@@ -39,7 +38,7 @@ export default function Inscription() {
             <NavbarDeb action={"Connexion"} />
 
             <div className="container mt-5 d-flex justify-content-center">
-                <div className="card p-4 shadow-lg rounded w-50 ">
+                <div className="card p-4 rounded w-50 ">
                     <h2 className="text-center mb-4">INSCRIPTION</h2>
                     {error && <p className="alert alert-danger">{error}</p>}
                     {success && <p className="alert alert-success">{success}</p>}

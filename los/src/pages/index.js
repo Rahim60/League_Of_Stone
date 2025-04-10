@@ -48,7 +48,7 @@ export default function Home() {
 
         {/* Formulaire */}
         {error && <p className="alert alert-danger">{error}</p>}
-        <form onSubmit={loginuser} className="border border-2 p-3 w-50 rounded shadow-lg">
+        <form onSubmit={loginuser} className="border p-3 rounded" style={{ width : "40%" }}>
 
           <div className="text-center mb-3 ">
             <h2 className="rounded">
@@ -61,7 +61,7 @@ export default function Home() {
             <label className="form-label fs-5">Email :</label>
             <input
               type="email" name="email" value={formData.email}
-              onChange={handleChange} required className="form-control rounded border-3" />
+              onChange={handleChange} required className="form-control rounded border" />
           </div>
 
           {/* Champ Mot de Passe */}
@@ -69,7 +69,7 @@ export default function Home() {
             <label className="form-label fs-5">Mot de passe :</label>
             <input
               type="password" name="password" value={formData.password}
-              onChange={handleChange} required className="form-control rounded border-3" />
+              onChange={handleChange} required className="form-control rounded border" />
           </div>
 
           {/* Bouton de Soumission */}

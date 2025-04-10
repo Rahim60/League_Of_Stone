@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Plateau from "@/components/Plateau";
 import axios from "axios";
@@ -6,117 +5,184 @@ import { useCallback, useEffect, useState } from "react";
 import UnknownDeck from "@/components/UnknownDeck";
 
 const Game = () => {
-
-    const dummy = [{ "_id": "67b4b3c947afde42bc37d428", "id": 24, "key": "Jax", "name": "Jax", "title": "Maître d'armes", "image": { "full": "Jax.png", "sprite": "champion1.png", "group": "champion", "x": 144, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 5, "magic": 7, "difficulty": 5 } }, { "_id": "67b4b3c947afde42bc37d429", "id": 37, "key": "Sona", "name": "Sona", "title": "Virtuose de la harpe", "image": { "full": "Sona.png", "sprite": "champion3.png", "group": "champion", "x": 432, "y": 0, "w": 48, "h": 48 }, "info": { "attack": 5, "defense": 2, "magic": 8, "difficulty": 4 } }, { "_id": "67b4b3c947afde42bc37d42a", "id": 18, "key": "Tristana", "name": "Tristana", "title": "Canonnière yordle", "image": { "full": "Tristana.png", "sprite": "champion3.png", "group": "champion", "x": 432, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 9, "defense": 3, "magic": 5, "difficulty": 4 } }, { "_id": "67b4b3c947afde42bc37d42b", "id": 110, "key": "Varus", "name": "Varus", "title": "Flèche de la vengeance", "image": { "full": "Varus.png", "sprite": "champion3.png", "group": "champion", "x": 288, "y": 96, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 3, "magic": 4, "difficulty": 2 } }]
-    const dummy1 = [{ "_id": "67b4b3c947afde42bc37d428", "id": 24, "key": "Jax", "name": "Jax", "title": "Maître d'armes", "image": { "full": "Jax.png", "sprite": "champion1.png", "group": "champion", "x": 144, "y": 48, "w": 48, "h": 48 }, "info": { "attack": 7, "defense": 5, "magic": 7, "difficulty": 5 } }]
-
     const [match, setMatch] = useState({
-        status : "",
-        joueur : {},
-        adversaire : {}
+        status: "",
+        joueur: {},
+        adversaire: {}
     });
-    const [deckJoueur, setDeckJoueur] = useState([]);
-    const [deckAdv, setDeckAdv] = useState([]);
-
     const [error, setError] = useState("");
 
-
-
-    useEffect(() => {
-        setDeckJoueur(dummy)
-    }, []);
-
-    useEffect(() => {
-        const storedDeck = sessionStorage.getItem("deck");
-        if (storedDeck) setDeckJoueur(storedDeck);
-    }, []);
-
-    useEffect(() => {
-        getMatch()
-    }, [])
-
-    const getMatch = useCallback(() =>
-        axios.get('/match/getMatch').then(({ data }) => {
-            setMatch(prevMatch => ({
-                ...prevMatch,
-                status : data?.status,
+    // --- Moved up so it's defined before useEffect uses it ---
+    const getMatch = useCallback(async () => {
+        try {
+            const { data } = await axios.get('/match/getMatch');
+            setMatch({
+                status: data?.status,
                 joueur: data?.player1,
                 adversaire: data?.player2,
-            }))
-        }).catch(({ message }) => {
-            console.log(message);
-            setError("Erreur lors de la recuperation du jeu")
-        }), []);
+            });
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur lors de la récupération du jeu");
+        }
+    }, []);
 
-    const initDeck = () =>
-        axios.get(`/match/initDeck?deck=${JSON.stringify(deckJoueur.map(({ key }) => ({ key })))}`).catch(({ message }) => {
-            console.log(message);
-            setError("Erreur lors de la recuperation du jeu")
-        });
+    // Setup interval to fetch match data
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getMatch();
+        }, 2000);
 
-    const pioche = () =>
-        axios.get(`/match/pickCard`).then(getMatch).catch(({ message }) => {
-            setError("Erreur tu n'as pas pu prendre ta carte")
-            console.log(message);
-        });
+        return () => clearInterval(interval);
+    }, [getMatch]);
 
-    const playCard = (cardKey) =>
-        axios.get(`/match/playCard?card=${cardKey}`).then(getMatch).catch(({ message }) => {
-            console.log(message);
-            setError("Echec, carte n'etait pas posée")
-        });
+    // Initial setup: get deck + opponent name
+    useEffect(() => {
+        const storedDeck = sessionStorage.getItem("deck");
 
-    const attackCard = (cardKey, targetCardKey) =>
-        axios.get(`/match/attack?card=${cardKey}&ennemyCard=${targetCardKey}`).then(getMatch).catch(({ message }) => {
-            console.log(message);
-            setError("Echec de l'attaque contre la de carte ton adversaire");
-        });
+        if (storedDeck) {
+            try {
+                const parsedDeck = JSON.parse(storedDeck);
+                setDeckJoueur(parsedDeck);
+                initDeck(parsedDeck);
+            } catch (e) {
+                console.log("Erreur parsing deck", e);
+            }
+        }
 
-    const attackPlayer = (cardKey) =>
-        axios.get(`/match/attackPlayer?card=${cardKey}`).then(getMatch).catch(({ message }) => {
-            console.log(message)
-            setError("Echec de l'attaque contre ton adversaire");
-        });
+        getMatch();
+    }, []);
 
-    const endTurn = () =>
-        axios.get(`/match/endTurn`).then(getMatch).catch(({ message }) => {
-            console.log(message)
-            setError("Echec fin de tour")
-        });
+    const initDeck = async (deck) => {
+        try {
+            const formattedDeck = deck.map(({ key }) => ({ key }));
+            await axios.get(`/match/initDeck?deck=${JSON.stringify(formattedDeck)}`);
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur lors de l'initialisation du deck");
+        }
+    };
+
+    const piocheCarte = async () => {
+        try {
+            await axios.get(`/match/pickCard`);
+            await getMatch();
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur: impossible de piocher une carte");
+        }
+    };
+
+    const playCard = async (cardKey) => {
+        try {
+            await axios.get(`/match/playCard?card=${cardKey}`);
+            await getMatch();
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur: la carte n'a pas été jouée");
+        }
+    };
+
+    const attackCard = async (cardKey, targetCardKey) => {
+        try {
+            await axios.get(`/match/attack?card=${cardKey}&ennemyCard=${targetCardKey}`);
+            await getMatch();
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur lors de l'attaque de la carte adverse");
+        }
+    };
+
+    const attackPlayer = async (cardKey) => {
+        try {
+            await axios.get(`/match/attackPlayer?card=${cardKey}`);
+            await getMatch();
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur lors de l'attaque du joueur adverse");
+        }
+    };
+
+    const endTurn = async () => {
+        try {
+            await axios.get(`/match/endTurn`);
+            await getMatch();
+        } catch (error) {
+            console.log(error.message);
+            setError("Erreur: impossible de terminer le tour");
+        }
+    };
+
+    // Log the state variables whenever they change
+    useEffect(() => {
+        console.log("Match State:", match);
+        console.log("Error State:", error);
+    }, [match, error]);
 
     return (
         <>
-            <Navbar title={"Match"} />
+            <Navbar title="Match" />
 
             <div className="container">
                 {error && <p className="alert alert-danger mt-3">{error}</p>}
 
                 <div className="row align-items-center justify-content-center my-3">
-                    {/* Left Side (Deck) */}
-                    <h4 className="alert bg-dark text-white text-center" >{ sessionStorage.getItem("nomAdv") }</h4>
 
-                    <div className="col-md-3 d-flex flex-column">
-                        <h6 className="lead text-center">Deck Adversaire</h6>
-                        <UnknownDeck />
-                        {/* <Deck deck={dummy} handleAjoutADeck={() => {}} type={"game"} /> */}
+                    {/* Only show opponent deck if adversaire is defined */}
+                    {match?.adversaire && (
+                        <>
+                            {/* Only show opponent name when it's available */}
+                            <h4 className="alert bg-dark text-white text-center">{match?.adversaire?.name}</h4>
 
-                    </div>
+                            <div className="col-md-3 d-flex flex-column justify-content-center align-items-center">
+                                <h6 className="lead text-center">Deck de {match?.adversaire?.name}</h6>
+                                <UnknownDeck />
+                                {match.adversaire?.deck && <p className="lead text-center">Cartes Restant : {match.adversaire?.deck}/20</p>}
 
-                    <Plateau />
+                            </div>
+                        </>
+                    )}
 
-                    {/* Right Side (Deck) */}
-                    <div className="col-md-3 d-flex flex-column justify-content-center align-items-center">
-                        <UnknownDeck />
-                        <h6 className="lead text-center">Votre Deck</h6>
-                        <button className="btn btn-outline-secondary" style={{width : "fit-content"}}>Terminez Tour</button>
-                    </div>
+                    {/* Only pass match data if it's available */}
+                    {match && match.joueur && match.adversaire && (
+                        <Plateau
+                            joueur={match.joueur}
+                            adversaire={match.adversaire}
+                            status={match.status}
+                            playCard={playCard}
+                            attackCard={attackCard}
+                            attackPlayer={attackPlayer}
+                            endTurn={endTurn}
+                        />
+                    )}
 
-                    <h4 className="alert bg-dark text-white text-center" >Vous</h4>
+                    {/* Only show the player deck */}
+                    {match.joueur?.deck && (
+                        <div className="col-md-3 d-flex flex-column justify-content-center align-items-center">
+                            {match.joueur?.deck && <p className="lead text-center">Cartes Restant : {match.joueur?.deck}/20</p>}
+                            <UnknownDeck />
+                            <h6 className="lead text-center">Votre Deck</h6>
+                            {match.joueur?.cardPicked === false && (
+                                <button
+                                    className="btn btn-outline-secondary"
+                                    onClick={piocheCarte}
+                                    disabled={match?.joueur?.cardPicked} // Disable if card is already picked
+                                >
+                                    Piocher une carte
+                                </button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Only show "You" section when match data is available */}
+                    {match && match.joueur && (
+                        <h4 className="alert bg-dark text-white text-center mt-4">Vous</h4>
+                    )}
                 </div>
             </div>
         </>
 
-    )
-}
+    );
+};
 
 export default Game;

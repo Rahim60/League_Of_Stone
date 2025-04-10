@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Deck from "@/components/Deck";
 import Navbar from "@/components/Navbar";
 
-const MatchMaking = () => {
+const ConfirmationDeck = () => {
   const [deck, setDeck] = useState([]);
   const router = useRouter();
 
@@ -57,4 +57,4 @@ const MatchMaking = () => {
   );
 }
 
-export default MatchMaking;
+export default ConfirmationDeck;
